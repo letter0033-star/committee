@@ -318,12 +318,28 @@ td input:focus,td select:focus{border-color:var(--accent);background:#fff;outlin
   </div>
 
   <div class="card">
-    <h2 class="big30">선정 결과 <span id="cntSel" class="chip n"></span></h2>
+    <h2 class="big30" id="resultTitle">선정 결과 <span id="cntSel" class="chip n"></span></h2>
     <div id="resultWarn"></div>
     <div class="pick" id="resultBox"></div>
     <div class="row" style="margin-top:14px">
       <button class="g" id="btnReroll">선정 안 된 사람 중 다시 추첨</button>
       <button class="g" id="btnGoDoc">문서 만들기 →</button>
+    </div>
+
+    <div id="resultTableWrap" style="margin-top:20px;display:none">
+      <div class="row mb" style="justify-content:space-between">
+        <h3 style="font-size:14px;margin:0" id="resultTableTitle">선정 결과 표</h3>
+        <button class="g org" id="btnResultXlsx">엑셀 내려받기</button>
+      </div>
+      <div class="tblwrap" style="max-height:400px">
+        <table id="tblResult">
+          <thead><tr>
+            <th>연번</th><th>성명</th><th>직위</th><th>교육경력</th><th>당해학교</th>
+            <th>담당학년</th><th>구분</th><th>성별</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -1177,8 +1193,16 @@ function renderResult(){
   if(VERIFYING) return;
   const box=$("#resultBox"); box.innerHTML="";
   const sel=selectedTeachers();
+  const cname=S.cfg.name||"위원회";
+  $("#resultTitle").innerHTML = `${esc(cname)} 선정 결과 <span id="cntSel" class="chip n"></span>`;
   $("#cntSel").textContent = sel.length?`${sel.length}명 선정`:"미실행";
-  if(!sel.length){ box.innerHTML=`<div class="hint">아직 선정 결과가 없습니다.</div>`; $("#resultWarn").innerHTML=""; return; }
+  if(!sel.length){
+    box.innerHTML=`<div class="hint">아직 선정 결과가 없습니다.</div>`; $("#resultWarn").innerHTML="";
+    $("#resultTableWrap").style.display="none";
+    return;
+  }
+  $("#resultTableTitle").textContent = `${cname} 선정 결과 표`;
+  renderResultTable(sel);
   const ci0=chairInfo();
   if(ci0){
     const who=S.teachers.find(t=>t.position===ci0.pos);
@@ -1223,6 +1247,36 @@ function renderResult(){
   if(!w) w=`<div class="note o">기준을 모두 충족했습니다. 시드 <b>${esc(S.result.seed)}</b> · 방식 ${S.result.algo==="random"?"무작위 추첨":"점수 기반 배정"}</div>`;
   $("#resultWarn").innerHTML=w;
 }
+function renderResultTable(sel){
+  const wrap=$("#resultTableWrap"); wrap.style.display="";
+  const tb=$("#tblResult tbody"); tb.innerHTML="";
+  sel.forEach((t,i)=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML = `<td>${i+1}</td><td>${esc(t.name)}</td><td>${esc(t.position)}</td>`+
+      `<td>${esc(t.career||"-")}년</td><td>${esc(t.months||"-")}개월</td>`+
+      `<td>${esc(t.grade||"-")}</td><td>${esc(t.dept||"-")}</td><td>${esc(t.gender||"-")}</td>`;
+    tb.appendChild(tr);
+  });
+}
+$("#btnResultXlsx").onclick=()=>{
+  const sel=selectedTeachers();
+  if(!sel.length){ alert("선정 결과가 없습니다."); return; }
+  const cname=S.cfg.name||"위원회";
+  const head=["연번","성명","직위","교육경력(년)","당해학교근무(개월)","담당학년","구분","성별"];
+  const rows=[head, ...sel.map((t,i)=>[i+1,t.name,t.position,t.career||"",t.months||"",t.grade||"",t.dept||"",t.gender||""])];
+  if(typeof XLSX==="undefined"){
+    dl(`${S.school.year||""}_${cname}_선정결과.csv`,
+       "﻿"+rows.map(r=>r.map(v=>`"${String(v==null?"":v).replace(/"/g,'""')}"`).join(",")).join("\r\n"),
+       "text/csv;charset=utf-8");
+    alert("엑셀 모듈을 불러오지 못해 CSV로 대신 저장했습니다(인터넷 연결 필요).");
+    return;
+  }
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws["!cols"]=[{wch:5},{wch:10},{wch:12},{wch:10},{wch:12},{wch:10},{wch:10},{wch:6}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, cname.slice(0,28)||"선정결과");
+  XLSX.writeFile(wb, `${S.school.year||""}_${cname}_선정결과.xlsx`);
+};
 function swap(t){
   const pool=poolList().filter(x=>!S.result.ids.includes(x.id));
   if(!pool.length){ alert("교체할 후보가 없습니다."); return; }
@@ -1623,14 +1677,10 @@ function docHTML(){
         `이에 대하여 참석자 전원이 불가피함을 확인하였습니다.</p>` : "")+
     `<h2 style="${DS.sec}">2. 최종 의결 및 결정사항</h2>`+
     `<ol style="${DS.lst}">`+
-    `<li>${esc(S.cfg.name||"위원회")} 위원(평가자) <b>${sel.length}명</b>을 위 명단과 같이 선정 `+
-      `<span style="color:#6b7684">(의결 방식: 구두합의 / 결과: 만장일치 찬성)</span></li>`+
-    `<li>선정된 위원(평가자)을 대상으로 사전 연수를 실시하고, 평가(심의) 관련 정보의 대외 보안 유지를 안내 `+
-      `<span style="color:#6b7684">(의결 방식: 구두합의 / 결과: 만장일치 찬성)</span></li>`+
-    `<li>본 회의록 및 선정 관련 자료(검증 파일 포함)는 학교 자체 보관하고, 평가 종료 후 규정에 따라 관리 `+
-      `<span style="color:#6b7684">(의결 방식: 구두합의 / 결과: 만장일치 찬성)</span></li>`+
-    `</ol>`+
-    signBlock;
+    `<li>${esc(S.cfg.name||"위원회")} 위원(평가자) <b>${sel.length}명</b>을 위 명단과 같이 선정</li>`+
+    `<li>선정된 위원(평가자)을 대상으로 사전 연수를 실시하고, 평가(심의) 관련 정보의 대외 보안 유지를 안내</li>`+
+    `<li>본 회의록 및 선정 관련 자료(검증 파일 포함)는 학교 자체 보관하고, 평가 종료 후 규정에 따라 관리</li>`+
+    `</ol>`;
 
   return shell(`${esc(seq?seq+" ":"")}${esc(S.cfg.name||"위원회")} 위원 선정 회의`, body);
 }
