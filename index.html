@@ -1,0 +1,1688 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="교육공무원 승진규정 및 교사 다면평가 계획에 따른 위원·평가자 선정과 학교 내 각종 위원회 위원 자동 선정 도구. 브라우저에서만 동작하며 데이터는 외부로 전송되지 않습니다.">
+<meta name="theme-color" content="#1f3260">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="위원 자동 선정">
+<title>학교 위원회 위원 자동 선정</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --bg:#f5f6f8; --panel:#fff; --line:#dfe3e8; --ink:#1c2530; --muted:#6b7684;
+  --accent:#1f5eff; --accent-soft:#eaf0ff; --ok:#127a3e; --ok-soft:#e6f5ec;
+  --warn:#b3541e; --warn-soft:#fdf0e6; --danger:#c0392b;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Malgun Gothic","맑은 고딕",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
+header{background:linear-gradient(120deg,#16233d 0%,#1f3260 55%,#2f4b85 100%);
+  padding:18px 0;border-bottom:3px solid #16213a}
+header .hd-in{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+  justify-content:space-between;gap:22px;flex-wrap:wrap}
+header .hd-txt{min-width:280px}
+header h1{font-size:24px;line-height:1.2;margin:0;font-weight:800;letter-spacing:-1px;color:#fff;
+  text-shadow:0 2px 6px rgba(0,0,0,.28)}
+header .hd-sub{margin:6px 0 0;font-size:12.5px;color:#c3d0ea;letter-spacing:-.2px}
+header .sch{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+label.sf{display:flex;align-items:center;gap:6px;font-size:12px;color:#cfdaf0;font-weight:700;white-space:nowrap}
+label.sf input{padding:6px 9px;border:1px solid rgba(255,255,255,.28);border-radius:6px;font-size:13px;
+  font-family:inherit;color:var(--ink);font-weight:400;background:#fff}
+label.sf input:focus{outline:none;border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.25)}
+label.sf input::placeholder{color:#9aa4b2}
+nav{background:#fff;border-bottom:1px solid var(--line);padding:0;
+  position:sticky;top:0;z-index:19;box-shadow:0 2px 6px rgba(20,30,60,.06)}
+nav .nav-in{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;gap:26px;overflow-x:auto}
+nav button{background:none;border:none;border-bottom:2px solid transparent;padding:12px 0;
+  font-size:14px;color:var(--muted);cursor:pointer;white-space:nowrap;font-family:inherit}
+nav button.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
+main{max-width:1180px;margin:0 auto;padding:20px}
+section{display:none}
+section.on{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:16px}
+.card h2{font-size:15px;margin:0 0 4px;font-weight:700}
+.card .desc{color:var(--muted);font-size:12.5px;margin-bottom:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.mb{margin-bottom:12px}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted)}
+label.f input,label.f select{padding:6px 9px;border:1px solid var(--line);border-radius:6px;
+  font-size:13.5px;font-family:inherit;color:var(--ink);background:#fff}
+button.b{background:var(--accent);color:#fff;border:none;border-radius:7px;padding:8px 16px;
+  font-size:13.5px;cursor:pointer;font-family:inherit;font-weight:600}
+button.b:hover{filter:brightness(1.08)}
+button.g{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:7px;
+  padding:8px 14px;font-size:13.5px;cursor:pointer;font-family:inherit}
+button.g:hover{background:#f2f4f7}
+button.sm{padding:3px 9px;font-size:12px;border-radius:5px}
+.card h2.big{font-size:19.5px;letter-spacing:-.4px}
+.card .desc.big-d{font-size:16px;line-height:1.6}
+.loadrow{gap:10px}
+button.g.org{background:#fff1e2;border:1px solid #f5c98a;color:#a3590a;font-size:13.5px;
+  font-weight:600;padding:8px 14px;border-radius:7px}
+button.g.org:hover{background:#ffe4c4;border-color:#eab568}
+button.g.org.warm{background:#ffe6d1;border-color:#f0ad72;color:#a34c0a}
+button.g.org.warm:hover{background:#ffd8b3;border-color:#e39a56}
+.card h2.big30{font-size:19.5px;letter-spacing:-.4px}
+button.x{color:var(--danger);border-color:#f0c9c4}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:center}
+th{background:#f7f8fa;font-weight:700;font-size:12.5px;white-space:nowrap}
+td input,td select{width:100%;border:1px solid transparent;background:transparent;padding:3px 4px;
+  font-size:13px;font-family:inherit;text-align:center;border-radius:4px;color:inherit}
+td input:focus,td select:focus{border-color:var(--accent);background:#fff;outline:none}
+.tblwrap{overflow:auto;max-height:520px;border:1px solid var(--line);border-radius:8px}
+.tblwrap table{border:none}
+.tblwrap th{position:sticky;top:0;z-index:2}
+.chip{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11.5px;font-weight:600}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.no{background:#feecea;color:var(--danger)}
+.chip.n{background:#eef0f3;color:var(--muted)}
+.note{border-radius:8px;padding:11px 13px;font-size:13px;margin-bottom:10px}
+.note.i{background:var(--accent-soft);color:#123a99}
+.note.w{background:var(--warn-soft);color:var(--warn)}
+.note.o{background:var(--ok-soft);color:var(--ok)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:860px){.grid2{grid-template-columns:1fr}}
+.chks{display:flex;flex-direction:column;gap:7px}
+.chks label{display:flex;gap:7px;align-items:center;font-size:13.5px;cursor:pointer}
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.presets button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:9px 13px;
+  cursor:pointer;font-family:inherit;font-size:13px;text-align:left;line-height:1.35}
+.presets button.on{border-color:var(--accent);background:var(--accent-soft);color:#123a99;font-weight:700}
+.presets button small{display:block;color:var(--muted);font-size:11px;font-weight:400}
+.presets button.on small{color:#3b62c4}
+.qrow{display:flex;gap:8px;align-items:center;margin-bottom:7px}
+.qrow select,.qrow input{padding:6px 8px;border:1px solid var(--line);border-radius:6px;font-family:inherit;font-size:13px}
+.pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.pcard{border:1px solid var(--line);border-radius:9px;padding:11px 12px;background:#fff;position:relative}
+.pcard.pin{border-color:var(--accent);background:var(--accent-soft)}
+.pcard .nm{font-weight:700;font-size:14.5px}
+.pcard .meta{color:var(--muted);font-size:12px;margin-top:3px;line-height:1.45}
+.pcard .acts{margin-top:8px;display:flex;gap:5px}
+.badge{position:absolute;top:9px;right:9px;font-size:11px;color:var(--accent);font-weight:700}
+#docview{background:#fff;border:1px solid var(--line);border-radius:8px;padding:34px 40px;
+  font-size:13.5px;line-height:1.75;font-family:"Malgun Gothic","맑은 고딕",sans-serif;color:#1a1a1a}
+#docview *{box-sizing:border-box}
+.stat{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:12px}
+.stat div{background:#f7f8fa;border-radius:8px;padding:9px 15px;min-width:96px}
+.stat b{display:block;font-size:20px;line-height:1.2}
+.stat span{font-size:11.5px;color:var(--muted)}
+.hint{font-size:11.5px;color:var(--muted);margin-top:5px}
+@media print{
+  @page{size:A4;margin:16mm 15mm}
+  header,nav,.card,.noprint{display:none!important}
+  body{background:#fff}
+  main{max-width:none;padding:0;margin:0}
+  #docview{border:none;padding:0;font-size:10.5pt}
+  section{display:none}
+  section.on{display:block}
+  #docview table{page-break-inside:auto}
+  #docview tr{page-break-inside:avoid}
+}
+
+/* ---------------- 모바일 최적화 ---------------- */
+@media(max-width:760px){
+  header{padding:14px 0}
+  header .hd-in{padding:0 14px;gap:14px}
+  header h1{font-size:19px;letter-spacing:-.6px}
+  header .hd-sub{font-size:11px;line-height:1.4}
+  header .sch{width:100%;gap:8px}
+  label.sf{flex:1 1 auto;min-width:0;font-size:11px;gap:4px}
+  label.sf input{flex:1;min-width:0;width:auto;font-size:13px;padding:8px 8px}
+  nav .nav-in{gap:16px;padding:0 12px}
+  nav button{font-size:13px;padding:11px 0}
+  main{padding:12px}
+  .card{padding:14px;border-radius:9px}
+  .card h2{font-size:14.5px}
+  .card h2.big30{font-size:17px}
+  .card h2.big{font-size:16.5px}
+  .row{gap:8px}
+  label.f{min-width:0;flex:1 1 130px}
+  label.f input,label.f select{width:100%;padding:8px 9px;font-size:14px}
+  button.b,button.g{padding:9px 14px;font-size:13.5px}
+  button.g.org{font-size:13px;padding:9px 12px}
+  table{font-size:12px}
+  th,td{padding:7px 6px}
+  td input,td select{font-size:12.5px}
+  .tblwrap{max-height:min(60vh,420px)}
+  .pick{grid-template-columns:1fr}
+  .stat{gap:10px}
+  .stat div{min-width:0;flex:1 1 42%;padding:8px 10px}
+  .stat b{font-size:17px}
+  #docview{padding:18px 16px;font-size:12.5px}
+  .presets{gap:6px}
+  .presets button{flex:1 1 42%;padding:8px 10px;font-size:12.5px}
+  .qrow{flex-wrap:wrap}
+  .schbar .in{gap:10px}
+}
+@media(max-width:420px){
+  header h1{font-size:17px}
+  .stat div{flex:1 1 100%}
+  .presets button{flex:1 1 100%}
+}
+
+/* 터치 조작을 위한 최소 탭 영역 확보 */
+@media(hover:none) and (pointer:coarse){
+  button.b,button.g,nav button{min-height:40px}
+  td input,td select,label.f input,label.f select{min-height:38px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-in">
+    <div class="hd-txt">
+      <h1>학교 위원회 위원 자동 선정</h1>
+      <p class="hd-sub">다면평가 계획에 따른 위원 · 평가자 선정 및 학교 내 각종 위원회 위원 자동 선정 도구</p>
+    </div>
+    <div class="sch">
+      <label class="sf">초등학교명<input id="schName" placeholder="예: 모산초등학교" style="width:150px"></label>
+      <label class="sf">학년도<input id="schYear" style="width:66px" value="2026"></label>
+      <label class="sf">교장<input id="schPrincipal" placeholder="성명" style="width:88px"></label>
+      <label class="sf">교감<input id="schVice" placeholder="성명" style="width:88px"></label>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-in">
+    <button class="on" data-tab="t1">① 교사 명단</button>
+    <button data-tab="t2">② 위원회 설정</button>
+    <button data-tab="t3">③ 선정 실행</button>
+    <button data-tab="t4">④ 결과 · 문서</button>
+    <button data-tab="t6">⑤ 사후 검증</button>
+    <button data-tab="t5">도움말</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ 1. 명단 ============ -->
+<section id="t1" class="on">
+  <div class="card">
+    <h2 class="big">명단 불러오기</h2>
+    <div class="desc big-d">엑셀(.xlsx) 또는 CSV 파일을 올리거나, 아래 표에서 직접 입력하세요. 입력값은 이 브라우저에 자동 저장됩니다.</div>
+    <div class="row mb loadrow">
+      <input type="file" id="fileIn" accept=".xlsx,.xls,.csv" class="g">
+      <button class="g org" id="btnSample">예시 명단 채우기</button>
+      <button class="g org" id="btnSampleDl">예시 명단 내려받기</button>
+      <button class="g org warm" id="btnClear">전체 삭제</button>
+      <button class="g org" id="btnTpl">양식 파일 내려받기(CSV)</button>
+    </div>
+    <div class="note i">인식 가능한 열 이름: <b>성명 / 성별 / 직위 / 교육경력(년) / 당해학교근무(개월) / 담당학년 / 구분 / 기타 / 재직상태</b> — 열 순서는 달라도 되며, 없는 열은 비워 두면 됩니다. <b>구분</b>은 관리자 · 담임 · 부장교사 · 수석교사 · 비교과 중 하나입니다.</div>
+    <div id="loadMsg"></div>
+  </div>
+
+  <div class="card">
+    <h2 class="big30">교사 명단 <span id="cntAll" class="chip n"></span></h2>
+    <div class="row mb">
+      <button class="b sm" id="btnAddRow">+ 교사 추가</button>
+      <span class="hint">직위·재직상태·담당학년은 선택 목록에서 고르세요. 교육경력은 연 단위 숫자(예: 12.5)입니다.</span>
+    </div>
+    <div class="tblwrap">
+      <table id="tblTeachers">
+        <thead><tr>
+          <th style="width:34px">#</th><th style="width:96px">성명</th><th style="width:60px">성별</th>
+          <th style="width:118px">직위</th><th style="width:88px">교육경력(년)</th>
+          <th style="width:104px">당해학교(개월)</th><th style="width:96px">담당학년</th>
+          <th style="width:110px">구분</th><th style="width:120px">기타</th>
+          <th style="width:96px">재직상태</th><th style="width:44px"></th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. 설정 ============ -->
+<section id="t2">
+  <div class="card">
+    <h2 class="big30">위원회 종류 선택하기</h2>
+    <div class="desc">프리셋을 고르면 법령 기준 인원·자격요건이 자동 입력됩니다. 이후 자유롭게 수정할 수 있습니다.</div>
+    <div class="presets" id="presetBox"></div>
+    <div id="presetNote"></div>
+    <div class="row" style="margin-top:12px">
+      <label class="f" style="flex:1;min-width:220px">위원회(선정) 명칭
+        <input id="cName"></label>
+      <label class="f">선정 인원
+        <input type="number" id="cSize" min="1" max="60" style="width:90px"></label>
+      <label class="f" id="wrapEval" style="display:none">평가대상자 수
+        <input type="number" id="cEvalN" min="0" style="width:110px"></label>
+    </div>
+    <div id="sizeNote" class="hint"></div>
+    <label class="f" style="margin-top:12px">근거 법령·규정 (회의록에 기재)
+      <input id="cBasis" placeholder="예: 본교 학교 위원회 규정"></label>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2 class="big30">후보 자격 조건</h2>
+      <div class="desc">조건에 맞지 않는 교사는 후보에서 자동 제외됩니다.</div>
+      <label class="f" style="margin-bottom:12px">위원장(당연직)
+        <select id="fChair" style="max-width:260px">
+          <option value="vice">교감</option>
+          <option value="principal">교장</option>
+          <option value="none">지정 안 함(위원 중 호선)</option>
+        </select></label>
+      <div class="hint" id="chairNote" style="margin:-8px 0 12px"></div>
+      <div class="chks" id="filterBox">
+        <label><input type="checkbox" id="fStatus"> 휴직·파견·직위해제·정직 중인 교사 제외</label>
+        <label><input type="checkbox" id="fContract"> 계약제 교원(기간제·산학겸임·강사) 제외</label>
+        <label><input type="checkbox" id="fAdmin"> 관리자(교장·교감) 제외</label>
+        <label><input type="checkbox" id="fMaster"> 수석교사 제외</label>
+      </div>
+      <div class="hint">특정 교사의 개별 제외·고정은 <b>③ 선정 실행</b> 화면의 후보자 표에서 지정합니다.</div>
+      <div class="row" style="margin-top:12px">
+        <label class="f">당해학교 근무 최소(개월)
+          <input type="number" id="fMonths" min="0" style="width:110px" value="0"></label>
+        <label class="f">교육경력 최소(년)
+          <input type="number" id="fCareer" min="0" style="width:110px" value="0"></label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="big30">배분 기준(쿼터)</h2>
+      <div class="desc">교육경력·담당학년은 모든 구간이 표시됩니다. 필요한 칸에만 인원을 넣고 <b>0명은 제한 없음</b>으로 처리됩니다. 합계가 선정 인원보다 적으면 나머지는 자유 선발됩니다.</div>
+      <div class="chks" style="margin-bottom:12px">
+        <label><input type="checkbox" id="fGenderMix"> <b>남·여 배분 필요</b> — 남교사·여교사를 각 1명 이상 포함</label>
+      </div>
+      <div id="quotaBox" style="max-height:330px;overflow:auto"></div>
+      <button class="g sm" id="btnAddQuota" style="margin-top:6px">+ 기준 추가</button>
+      <button class="g sm" id="btnResetQuota" style="margin-top:6px">기본값으로 되돌리기</button>
+      <div class="hint" id="quotaSum"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. 선정 ============ -->
+<section id="t3">
+  <div class="card">
+    <h2 class="big30">선정 방식</h2>
+    <div class="row mb">
+      <label class="f">방식
+        <select id="algo" style="width:230px">
+          <option value="random">① 조건 충족 + 무작위 추첨</option>
+          <option value="balanced">② 점수 기반 자동 배정(균형 최적화)</option>
+        </select></label>
+      <label class="f">추첨 시드(공정성 기록용)
+        <input id="seed" style="width:150px"></label>
+      <button class="g" id="btnNewSeed" style="align-self:end">새 시드</button>
+      <button class="b" id="btnRun" style="align-self:end">선정 실행</button>
+    </div>
+    <div class="hint">같은 시드 · 같은 명단 · 같은 조건이면 결과가 항상 동일하게 재현됩니다. 회의록에 시드를 기록하면 추첨의 공정성을 사후 검증할 수 있습니다.</div>
+  </div>
+
+  <div class="card">
+    <h2 class="big30">선정 결과 <span id="cntSel" class="chip n"></span></h2>
+    <div id="resultWarn"></div>
+    <div class="pick" id="resultBox"></div>
+    <div class="row" style="margin-top:14px">
+      <button class="g" id="btnReroll">선정 안 된 사람 중 다시 추첨</button>
+      <button class="g" id="btnGoDoc">문서 만들기 →</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="big30">후보자 현황</h2>
+    <div class="stat" id="poolStat"></div>
+    <div id="poolWarn"></div>
+    <div class="tblwrap" style="max-height:300px">
+      <table id="tblPool">
+        <thead><tr><th>성명</th><th>직위</th><th>경력</th><th>당해학교</th><th>담당학년</th><th>구분</th><th>성별</th><th>후보 여부</th><th>고정/제외</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="hint">「고정」은 반드시 포함, 「제외」는 후보에서 뺍니다. 지정 후 다시 <b>선정 실행</b>을 누르세요.</div>
+  </div>
+</section>
+
+<!-- ============ 4. 문서 ============ -->
+<section id="t4">
+  <div class="card noprint">
+    <h2 class="big30">문서 출력</h2>
+    <div class="row mb">
+      <label class="f">문서 종류
+        <select id="docType" style="width:200px">
+          <option value="minutes">선정 회의록</option>
+          <option value="roster">위원 명단</option>
+          <option value="notice">선정 결과 알림장</option>
+        </select></label>
+      <label class="f">회의 일자
+        <input type="date" id="docDate"></label>
+      <label class="f">회의 시각
+        <input type="time" id="docTime" value="15:00" style="width:110px"></label>
+      <label class="f">회의 장소
+        <input id="docPlace" value="교무실" style="width:130px"></label>
+      <label class="f">회의 구분
+        <select id="docKind" style="width:110px"><option>정기 회의</option><option>임시 회의</option></select></label>
+    </div>
+    <div class="row mb">
+      <label class="f">회차
+        <input id="docSeq" value="제1차" style="width:80px"></label>
+      <label class="f">주관 부서
+        <input id="docDept" value="교무기획부" style="width:130px"></label>
+      <label class="f" style="flex:1;min-width:240px">추가 참석자 (쉼표로 구분)
+        <input id="docAttend" placeholder="예: 김부장(교무기획부장), 이부장(연구정보부장)"></label>
+    </div>
+    <div class="row">
+      <button class="b" id="btnPrint">인쇄 / PDF 저장</button>
+      <button class="g" id="btnWord">Word(.doc)로 저장</button>
+      <button class="g" id="btnCsv">명단 CSV 저장</button>
+      <button class="g" id="btnCopy">본문 복사</button>
+    </div>
+    <div class="hint">「2026학년도 교사 다면평가 계획」 Ⅳ-3-다에 따라 다면평가자 선정 과정 회의록은 학교 자체 보관 대상입니다.</div>
+  </div>
+  <div id="docview">③ 선정 실행을 먼저 진행해 주세요.</div>
+</section>
+
+<!-- ============ 6. 사후 검증 ============ -->
+<section id="t6">
+  <div class="card">
+    <h2>사후 검증이란</h2>
+    <div class="desc">선정이 끝난 뒤 "정말 무작위였는가", "미리 정해둔 것 아닌가"라는 문제 제기가 있을 때, 같은 결과를 다시 만들어 보여 주는 절차입니다.</div>
+    <p>이 앱의 추첨은 <b>시드(추첨 식별번호)</b>를 시작값으로 계산됩니다. 같은 시드에 같은 조건을 넣으면 언제나 같은 명단이 나오고,
+      조건이 하나라도 다르면 전혀 다른 명단이 나옵니다. 이 성질을 이용해 <b>결과를 미리 정해두는 것이 불가능함</b>을 증명할 수 있습니다.</p>
+    <div class="note w"><b>시드만 회의록에 적어두면 검증할 수 없습니다.</b> 아래 네 가지가 모두 동일해야 같은 결과가 재현됩니다.
+      <ol style="margin:8px 0 0 0">
+        <li>전체 교사 명단 — <b>행 순서까지</b> 동일 (한 명만 추가돼도 결과가 달라집니다)</li>
+        <li>위원회 종류 · 선정 인원 · 위원장 설정</li>
+        <li>후보 자격 조건 · 배분 기준 · 남녀 배분 여부</li>
+        <li>시드 값 · 선정 방식 · 고정/제외로 지정한 사람</li>
+      </ol>
+    </div>
+    <p>그래서 선정 직후 <b>검증 파일(.json)</b>을 저장해 회의록과 함께 보관해야 합니다.
+      이 파일 하나에 위 네 가지가 모두 들어 있어, 나중에 다른 컴퓨터에서 불러오기만 해도 검증이 끝납니다.</p>
+    <h3 style="font-size:14px;margin-bottom:6px">보관 방법 (권장)</h3>
+    <ol>
+      <li>선정 직후 <b>검증 파일 저장</b> → 회의록 · 명단과 같은 폴더에 보관</li>
+      <li>회의록에 인쇄된 <b>추첨 식별번호(시드)</b>와 <b>명단 지문</b>을 파일과 대조할 수 있도록 함께 보관</li>
+      <li>보존 기간은 학교의 근무성적평정 관련 자료 보존 기준을 따름</li>
+    </ol>
+    <div class="note i"><b>명단 지문</b>은 명단과 모든 설정을 16자리 문자로 압축한 값입니다.
+      파일을 열어 한 글자라도 고치면 지문이 달라지므로, 회의록에 인쇄된 지문과 비교하면 <b>파일이 나중에 변조되었는지</b>까지 확인할 수 있습니다.</div>
+    <p class="hint">모든 검증은 이 컴퓨터 안에서만 이루어지며 외부로 전송되지 않습니다.</p>
+  </div>
+
+  <div class="card">
+    <h2>1단계 · 검증 파일 저장</h2>
+    <div class="desc">③ 선정 실행을 마친 직후에 저장하세요. 선정 당시의 명단과 모든 조건, 결과가 함께 기록됩니다.</div>
+    <div class="row mb">
+      <button class="b" id="btnVerSave">검증 파일(.json) 저장</button>
+      <button class="g" id="btnVerRoster">선정 당시 전체 명단 CSV 저장</button>
+    </div>
+    <div id="verSaveMsg"></div>
+  </div>
+
+  <div class="card">
+    <h2>2단계 · 검증 실행</h2>
+    <div class="desc">보관해 둔 검증 파일을 선택하면 그 조건으로 선정을 다시 실행하여 기록된 명단과 대조합니다.
+      대조 과정에서는 현재 작업 중인 명단·설정이 바뀌지 않습니다.<br>
+      대조가 끝나면 아래에 <b>「교사 명단 · 설정 · 결과 모두 불러오기」</b> 단추가 나타납니다. 이 단추로 ①~④ 탭을 선정 당시 상태로 되돌릴 수 있습니다.
+      (교사 명단이 비어 있는 상태라면 자동으로 불러옵니다.)</div>
+    <div class="row mb">
+      <input type="file" id="verFile" accept=".json,application/json" class="g">
+    </div>
+    <div id="verReport"><div class="hint">검증 파일을 선택하면 결과가 여기에 표시됩니다.</div></div>
+  </div>
+
+  <div class="card">
+    <h2>검증이 실패했다면</h2>
+    <table>
+      <thead><tr><th style="width:170px">표시</th><th>의미와 조치</th></tr></thead>
+      <tbody>
+        <tr><td><span class="chip no">파일 변조 의심</span></td>
+          <td style="text-align:left">저장된 지문과 다시 계산한 지문이 다릅니다. 파일을 텍스트 편집기로 열어 수정한 경우 발생합니다. 원본 파일을 다시 확인하세요.</td></tr>
+        <tr><td><span class="chip no">결과 불일치</span></td>
+          <td style="text-align:left">파일은 정상이지만 재실행 결과가 기록과 다릅니다. 앱 버전이 바뀌어 선정 방식이 달라졌을 가능성이 있습니다. 선정 당시 사용한 앱 파일로 검증하세요.</td></tr>
+        <tr><td><span class="chip n">순서만 다름</span></td>
+          <td style="text-align:left">선정된 사람은 같지만 나열 순서가 다른 경우입니다. 위원 구성에는 영향이 없으므로 검증 성공으로 봅니다.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 5. 도움말 ============ -->
+<section id="t5">
+  <div class="card">
+    <h2>다면평가 관련 법정 기준 요약</h2>
+    <div class="desc">근거: 「교육공무원 승진규정」 제28조의2~9, 2026학년도 교사 다면평가 계획(강원특별자치도교육청)</div>
+    <h3 style="font-size:14px">다면평가관리위원회 (제28조의4 ②)</h3>
+    <ul>
+      <li>위원장: 교(원)감(근무성적 평정자) / 구성권자: 교(원)장(확인자)</li>
+      <li>위원: 동료교사 <b>3명 이상 7명 이하</b></li>
+      <li>고려 요소: 당해 학교 근무기간, 교육경력, 담당 과목, 학년, 업무부서, 성별</li>
+      <li>보건·영양·사서·전문상담교사 등 <b>1명 이상 참여 권장</b></li>
+      <li>구성이 불가능할 경우 학교장이 지정 가능</li>
+    </ul>
+    <h3 style="font-size:14px">다면평가자 (제28조의4)</h3>
+    <table style="max-width:420px">
+      <thead><tr><th>평가대상자 수</th><th>다면평가자 수</th></tr></thead>
+      <tbody>
+        <tr><td>15명 이하</td><td>3명 이상</td></tr>
+        <tr><td>16 ~ 20명</td><td>4명 이상</td></tr>
+        <tr><td>21 ~ 25명</td><td>5명 이상</td></tr>
+        <tr><td>26 ~ 30명</td><td>6명 이상</td></tr>
+        <tr><td>31 ~ 35명</td><td>7명 이상</td></tr>
+        <tr><td>36명 이상</td><td>8명 이상</td></tr>
+      </tbody>
+    </table>
+    <p><b>선정기준</b>: 평가일(학년도 종료일) 현재 당해학교 실근무 10개월 이상 정규교사, 평가대상자의 업무실적을 종합 파악할 수 있는 교사<br>
+    <b>제외</b>: 휴직·파견·직위해제·정직 중인 교사, 계약제 교원(기간제·산학겸임·전일제강사)<br>
+    <b>참고</b>: 수석교사는 평가자로 가능하나 평가대상자는 아님. 평가자 본인 평가 시에는 본인을 제외한 나머지 평가자만 평가.</p>
+    <h3 style="font-size:14px">선정 절차 (계획 4쪽)</h3>
+    <ol>
+      <li>선정 기준에 따른 연명부 작성 + 소속 교원 의견 수렴</li>
+      <li>다면평가관리위원회에서 선정 기준 확정</li>
+      <li>근무성적 확인자(교장)가 다면평가자 선정 — 최종 결재</li>
+      <li>선정된 다면평가자 대상 평정자 연수 실시</li>
+    </ol>
+    <div class="note w">공정성·익명성 확보를 위해 다면평가자는 <b>평가 직전</b>에 선정하도록 계획에 명시되어 있습니다. 선정 과정 회의록은 학교 자체 보관합니다.</div>
+  </div>
+  <div class="card">
+    <h2>배분 기준이 선정 인원을 초과할 때</h2>
+    <div class="note i">한 교사는 여러 자격을 <b>동시에</b> 가집니다. 예를 들어 <b>교육경력 22년 · 5학년 담임 · 교무기획부장</b>인 교사 1명은
+    「20년 이상 1명」, 「5·6학년 1명」, 「부장교사 1명」 세 기준을 혼자서 채웁니다.
+    그래서 배분 기준의 합계가 선정 인원보다 많아도 대부분 정상적으로 선정됩니다.</div>
+    <p><b>다만 다음 두 경우는 주의해야 합니다.</b></p>
+    <ol>
+      <li><b>같은 축 안에서는 겹칠 수 없습니다.</b> 교육경력 구간(10년 이내 / 10~15년 / 15~20년 / 20년 이상)은 한 사람이 하나만 해당하므로,
+        네 구간에 각 1명씩 지정하면 최소 4명이 반드시 필요합니다. 담당학년·구분·직종도 마찬가지입니다.
+        → 앱이 <b>축별 최소 필요 인원</b>을 계산해 부족하면 선정 인원을 늘리도록 안내합니다.</li>
+      <li><b>겹치는 조건을 갖춘 교사가 실제로 없을 수 있습니다.</b> 예를 들어 「비교과교사 1명」과 「5·6학년 담임 1명」은
+        서로 다른 사람일 수밖에 없습니다. 이 경우 ③ 선정 실행 화면에 어떤 기준이 몇 명 부족한지 표시되므로,
+        선정 인원을 늘리거나 해당 기준을 0명(제한 없음)으로 낮추면 됩니다.</li>
+    </ol>
+    <p class="hint">인원을 0으로 두면 그 기준은 적용되지 않습니다. 「점수 기반 자동 배정」을 쓰면 쿼터를 적게 지정해도
+    경력·학년·구분·성별이 자동으로 고르게 분산됩니다.</p>
+  </div>
+  <div class="card">
+    <h2>사용 순서</h2>
+    <ol>
+      <li><b>① 교사 명단</b> — 엑셀/CSV 업로드 또는 직접 입력</li>
+      <li><b>② 위원회 설정</b> — 프리셋 선택 → 인원·자격조건·배분기준 조정</li>
+      <li><b>③ 선정 실행</b> — 방식·시드 선택 후 실행, 필요 시 고정/제외로 수동 조정</li>
+      <li><b>④ 결과·문서</b> — 회의록·명단 출력</li>
+    </ol>
+    <div class="note i">모든 데이터는 이 컴퓨터의 브라우저에만 저장되며 외부로 전송되지 않습니다.</div>
+  </div>
+</section>
+
+</main>
+
+<script>
+"use strict";
+
+/* ---------------- 상수 ---------------- */
+const POSITIONS = ["교사","담임교사","교과전담교사","수석교사","보건교사","영양교사","사서교사","전문상담교사","특수교사","기간제교사","산학겸임교사","강사","교감","교장"];
+const STATUSES  = ["재직","휴직","파견","직위해제","정직","기타"];
+const GRADES    = ["","1학년","2학년","3학년","4학년","5학년","6학년","전담","비담임","특수","유치원"];
+const KINDS     = ["","관리자","담임","부장교사","수석교사","비교과"];
+const NONSUBJ   = ["보건교사","영양교사","사서교사","전문상담교사"];
+const CONTRACT  = ["기간제교사","산학겸임교사","강사"];
+const ADMIN     = ["교감","교장"];
+
+const AXES = {
+  career : {label:"교육경력", buckets:["10년 이내","10~15년","15~20년","20년 이상"],
+            of:t=>{const c=+t.career||0; return c<10?"10년 이내":c<15?"10~15년":c<20?"15~20년":"20년 이상";}},
+  grade  : {label:"담당학년", buckets:["1·2학년","3·4학년","5·6학년","전담·비담임","기타"],
+            of:t=>{const g=t.grade||"";
+              if(/^[12]학년/.test(g))return "1·2학년";
+              if(/^[34]학년/.test(g))return "3·4학년";
+              if(/^[56]학년/.test(g))return "5·6학년";
+              if(/전담|비담임/.test(g))return "전담·비담임";
+              return "기타";}},
+  gender : {label:"성별", buckets:["남","여"], of:t=>t.gender||""},
+  kind   : {label:"직종", buckets:["비교과교사","특수교사","수석교사","일반교사"],
+            of:t=>NONSUBJ.includes(t.position)?"비교과교사":t.position==="특수교사"?"특수교사":t.position==="수석교사"?"수석교사":"일반교사"},
+  dept   : {label:"구분", buckets:["관리자","담임","부장교사","수석교사","비교과"], of:t=>t.dept||""}
+};
+/* 배분 기준 목록에 노출되는 축 (성별은 별도 체크박스로 관리) */
+const QUOTA_AXES = ["career","grade","dept","kind"];
+/* 교육경력·담당학년은 전 구간을 항상 표시, 구분·직종은 대표 1행만 표시 */
+const QUOTA_FULL_AXES = ["career","grade"];
+const QUOTA_ONE_AXES  = {dept:"담임", kind:"비교과교사"};
+function expandQuotas(list){
+  list=(list||[]).filter(q=>QUOTA_AXES.includes(q.axis));
+  const out=[];
+  QUOTA_FULL_AXES.forEach(ax=>AXES[ax].buckets.forEach(b=>{
+    const e=list.find(q=>q.axis===ax&&q.bucket===b);
+    out.push({axis:ax,bucket:b,n:e?(+e.n||0):0});
+  }));
+  Object.entries(QUOTA_ONE_AXES).forEach(([ax,def])=>{
+    const ex=list.filter(q=>q.axis===ax);
+    if(ex.length) ex.forEach(q=>out.push({axis:ax,bucket:q.bucket,n:+q.n||0}));
+    else out.push({axis:ax,bucket:def,n:0});
+  });
+  return out;
+}
+
+const PRESETS = {
+  dmp_com:{
+    name:"다면평가관리위원회", size:5, min:3, max:7,
+    basis:"「교육공무원 승진규정」제28조의4 제2항, 2026학년도 교사 다면평가 계획",
+    note:"위원장은 교(원)감(근무성적 평정자)이며, 위원은 동료교사 3~7명입니다. 당해 학교 근무기간·교육경력·담당 과목·학년·업무부서·성별을 고려하고, 보건·영양·사서·전문상담교사 등 1명 이상 참여를 권장합니다.",
+    chair:"vice", genderMix:true,
+    filters:{fStatus:1,fContract:1,fAdmin:1,fMaster:0,fMonths:0,fCareer:0},
+    quotas:[{axis:"kind",bucket:"비교과교사",n:1},{axis:"career",bucket:"10년 이내",n:1},{axis:"career",bucket:"20년 이상",n:1}],
+    evalMode:false, short:"교감 위원장 + 동료교사 3~7명"
+  },
+  dmp_rater:{
+    name:"다면평가자", size:4, min:3, max:20,
+    basis:"「교육공무원 승진규정」제28조의4, 2026학년도 교사 다면평가 계획",
+    note:"평가일(학년도 종료일) 현재 당해학교 실근무 10개월 이상 정규교사만 선정할 수 있습니다. 휴직·파견·직위해제·정직 중인 교사와 계약제 교원은 제외됩니다. 평가대상자 수를 입력하면 법정 최소 인원이 자동 계산됩니다.",
+    chair:"none",
+    filters:{fStatus:1,fContract:1,fAdmin:1,fMaster:0,fMonths:10,fCareer:0},
+    quotas:[{axis:"career",bucket:"10년 이내",n:1},{axis:"career",bucket:"10~15년",n:1},{axis:"career",bucket:"15~20년",n:1},{axis:"career",bucket:"20년 이상",n:1}],
+    evalMode:true, short:"평가대상자 수에 따라 3~8명 이상"
+  },
+  hr:{
+    name:"교원인사자문위원회", size:5, min:3, max:11,
+    basis:"교육공무원 인사관리규정, 학교 교원인사자문위원회 운영 규정",
+    note:"학교 인사 관련 자문 기구입니다. 경력·구분·성별 균형을 고려해 구성합니다.",
+    chair:"vice",
+    filters:{fStatus:1,fContract:1,fAdmin:1,fMaster:0,fMonths:0,fCareer:0},
+    quotas:[{axis:"career",bucket:"10년 이내",n:1},{axis:"career",bucket:"20년 이상",n:1}],
+    evalMode:false, short:"인사 자문 기구"
+  },
+  bonus:{
+    name:"성과상여금심사위원회", size:5, min:3, max:9,
+    basis:"교육공무원 성과상여금 지급지침",
+    note:"성과상여금 지급 기준 심의 기구입니다.",
+    chair:"vice",
+    filters:{fStatus:1,fContract:1,fAdmin:1,fMaster:0,fMonths:0,fCareer:0},
+    quotas:[{axis:"kind",bucket:"비교과교사",n:1}],
+    evalMode:false, short:"성과급 기준 심의"
+  },
+  curri:{
+    name:"비법정위원회(교무위원회)", size:7, min:3, max:15,
+    basis:"본교 학교 위원회 규정",
+    note:"학년군·교과 대표성이 고르게 반영되도록 배분 기준을 활용하세요.",
+    chair:"principal",
+    filters:{fStatus:1,fContract:0,fAdmin:1,fMaster:0,fMonths:0,fCareer:0},
+    quotas:[{axis:"grade",bucket:"1·2학년",n:1},{axis:"grade",bucket:"3·4학년",n:1},{axis:"grade",bucket:"5·6학년",n:1}],
+    evalMode:false, short:"학년군 대표 구성"
+  },
+  custom:{
+    name:"사용자 정의 위원회", size:5, min:1, max:60,
+    basis:"", note:"자격 조건과 배분 기준을 직접 설정하세요.",
+    chair:"none",
+    filters:{fStatus:1,fContract:1,fAdmin:1,fMaster:0,fMonths:0,fCareer:0},
+    quotas:[], evalMode:false, short:"직접 설정"
+  }
+};
+
+function raterMin(n){ n=+n||0;
+  if(n<=0) return 0;
+  if(n<=15) return 3; if(n<=20) return 4; if(n<=25) return 5;
+  if(n<=30) return 6; if(n<=35) return 7; return 8; }
+
+/* ---------------- 상태 ---------------- */
+const S = {
+  school:{name:"",year:"2026",principal:"",vice:""},
+  teachers:[],
+  presetId:"dmp_com",
+  cfg:{name:"",size:5,basis:"",evalN:0,chair:"vice",filters:{},quotas:[]},
+  algo:"random", seed:"",
+  pinned:[], banned:[],
+  result:null
+};
+let uid = 1;
+
+/* ---------------- 저장 ---------------- */
+let VERIFYING=false;   // 검증 재실행 중에는 저장·화면 갱신을 하지 않음
+function save(){ if(VERIFYING) return; try{ localStorage.setItem("wiwon_v1", JSON.stringify(S)); }catch(e){} }
+function load(){
+  try{ const r = localStorage.getItem("wiwon_v1"); if(!r) return false;
+    const d = JSON.parse(r); Object.assign(S,d);
+    uid = Math.max(1,...S.teachers.map(t=>+t.id||0))+1; return true;
+  }catch(e){ return false; }
+}
+
+/* ---------------- 유틸 ---------------- */
+const $  = s=>document.querySelector(s);
+const $$ = s=>[...document.querySelectorAll(s)];
+function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function mulberry32(a){ return function(){ a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function hashSeed(str){ let h=2166136261; for(let i=0;i<str.length;i++){ h^=str.charCodeAt(i); h=Math.imul(h,16777619);} return h>>>0; }
+function newSeed(){ const d=new Date();
+  return d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0")
+    +"-"+Math.random().toString(36).slice(2,7).toUpperCase(); }
+function todayISO(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function korDate(iso){ if(!iso) return ""; const [y,m,d]=iso.split("-"); return `${y}. ${+m}. ${+d}.`; }
+
+/* ---------------- 탭 ---------------- */
+$$("nav button").forEach(b=>b.onclick=()=>{
+  $$("nav button").forEach(x=>x.classList.toggle("on",x===b));
+  $$("main section").forEach(s=>s.classList.toggle("on",s.id===b.dataset.tab));
+  if(b.dataset.tab==="t3"){ renderPool(); }
+  if(b.dataset.tab==="t4"){ renderDoc(); }
+});
+function goTab(id){ $$("nav button").forEach(b=>{ if(b.dataset.tab===id) b.click(); }); }
+
+/* ---------------- 학교 정보 ---------------- */
+["Name","Year","Principal","Vice"].forEach(k=>{
+  const el=$("#sch"+k), key=k.toLowerCase();
+  el.oninput=()=>{ S.school[key]=el.value; save(); };
+});
+
+/* ---------------- 명단 ---------------- */
+function blankT(){ return {id:uid++,name:"",gender:"",position:"교사",career:"",months:"",grade:"",dept:"",subject:"",status:"재직"}; }
+
+function renderTeachers(){
+  const tb=$("#tblTeachers tbody"); tb.innerHTML="";
+  S.teachers.forEach((t,i)=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML =
+      `<td>${i+1}</td>`+
+      `<td><input data-f="name" value="${esc(t.name)}"></td>`+
+      `<td>${sel("gender",t.gender,["","남","여"])}</td>`+
+      `<td>${sel("position",t.position,POSITIONS)}</td>`+
+      `<td><input data-f="career" type="number" step="0.1" value="${esc(t.career)}"></td>`+
+      `<td><input data-f="months" type="number" value="${esc(t.months)}"></td>`+
+      `<td>${sel("grade",t.grade,GRADES)}</td>`+
+      `<td>${sel("dept",t.dept,KINDS)}</td>`+
+      `<td><input data-f="subject" value="${esc(t.subject)}"></td>`+
+      `<td>${sel("status",t.status,STATUSES)}</td>`+
+      `<td><button class="g sm x" data-del="1">×</button></td>`;
+    tr.querySelectorAll("[data-f]").forEach(el=>{
+      el.oninput=()=>{ t[el.dataset.f]=el.value; save(); };
+      el.onchange=()=>{ t[el.dataset.f]=el.value; save(); };
+    });
+    tr.querySelector("[data-del]").onclick=()=>{
+      S.teachers.splice(i,1); S.pinned=S.pinned.filter(x=>x!==t.id); S.banned=S.banned.filter(x=>x!==t.id);
+      save(); renderTeachers(); };
+    tb.appendChild(tr);
+  });
+  $("#cntAll").textContent = "총 "+S.teachers.length+"명";
+  refreshDeptAxis();
+  renderQuotas();
+}
+function sel(f,v,opts){
+  return `<select data-f="${f}">`+opts.map(o=>`<option${o===v?" selected":""}>${esc(o)}</option>`).join("")+`</select>`;
+}
+function refreshDeptAxis(){ /* 구분은 고정 목록이므로 별도 갱신 없음 */ }
+
+$("#btnAddRow").onclick=()=>{ S.teachers.push(blankT()); save(); renderTeachers(); };
+$("#btnClear").onclick=()=>{ if(confirm("명단을 모두 삭제할까요?")){ S.teachers=[];S.pinned=[];S.banned=[];S.result=null; save(); renderTeachers(); } };
+
+/* ---------- 예시 명단 (54명 표준 초등학교 구성) ---------- */
+const SURNAME="김,이,박,최,정,강,조,윤,장,임,한,오,서,신,권,황,안,송,전,홍,고,문,양,손,배,백,허,유,남,심".split(",");
+const GIVEN=("서준,하윤,도윤,지우,시우,예은,민준,서아,주원,하은,지호,유진,건우,채원,시온,다은,준서,소율,은우,나윤,"+
+ "태윤,수아,현우,서연,지안,윤서,도현,예진,시현,가온,해준,리아,정우,수빈,연우,다연,우진,지민,현서,소은,"+
+ "재윤,아린,동현,세아,성민,하람,규민,유나,태호,보람,진우,혜인,승현,다올").split(",");
+
+function sampleRoster(){
+  let k=0;
+  const nm=()=>SURNAME[k%SURNAME.length]+GIVEN[k++];
+  const R=[];
+  const add=o=>R.push(Object.assign({name:nm(),gender:"",career:"",months:"",grade:"",dept:"",subject:"",status:"재직",position:"교사"},o));
+
+  // 1) 관리자 2명
+  add({position:"교장", career:34, months:24, grade:"비담임", dept:"관리자", subject:"학교 총괄", gender:"남"});
+  add({position:"교감", career:29, months:12, grade:"비담임", dept:"관리자", subject:"교무 총괄", gender:"여"});
+
+  // 2) 담임 38명 (1~4학년 각 6, 5~6학년 각 7) — 각 학년 첫 번째는 학년부장
+  const perGrade=[6,6,6,6,7,7];
+  const careers=[3,6,9,11,13,15,17,19,22,25,28,31];
+  perGrade.forEach((cnt,gi)=>{
+    for(let j=0;j<cnt;j++){
+      const head=(j===0);
+      add({position:"교사",
+        career: head? 18+gi : careers[(gi*3+j)%careers.length] + (j%2?0.5:0),
+        months: (gi+j)%7===0? 8 : 12+((gi+j)%5)*12,
+        grade: (gi+1)+"학년",
+        dept: head? "부장교사":"담임",
+        subject: head? (gi+1)+"학년 부장" : "",
+        gender: (gi+j)%2? "여":"남"});
+    }
+  });
+  // 3) 담임 중 업무부장 2명 (2학년·5학년 두 번째 교사)
+  const b1=R.find(t=>t.grade==="2학년"&&t.dept==="담임");
+  const b2=R.find(t=>t.grade==="5학년"&&t.dept==="담임");
+  [[b1,"교무기획부장"],[b2,"연구정보부장"]].forEach(([t,job])=>{ if(t){ t.dept="부장교사"; t.subject=job; t.career=Math.max(t.career,20); } });
+
+  // 4) 부장(전담)교사 4명 — 구분: 부장교사
+  ["생활인성부장","방과후체육부장","교육복지부장","정보교육부장"].forEach((job,i)=>{
+    add({position:"교과전담교사", career:[21,23,26,19][i], months:12+(i%3)*12,
+      grade:"전담", dept:"부장교사", subject:job, gender:i%2?"여":"남"});
+  });
+  // 5) 전담교사 4명 — 구분: 담임
+  ["영어","체육","과학","음악"].forEach((sub,i)=>{
+    add({position:"교과전담교사", career:[5,8,12,16][i], months:(i===0?9:12+i*12),
+      grade:"전담", dept:"담임", subject:sub+" 전담", gender:i%2?"남":"여"});
+  });
+  // 6) 특수교사 1명 — 구분: 담임
+  add({position:"특수교사", career:10, months:24, grade:"특수", dept:"담임", subject:"특수학급", gender:"여"});
+
+  // 7) 비교과 5명 (보건 2, 영양 1, 전문상담 1, 사서 1)
+  add({position:"보건교사", career:14, months:36, grade:"비담임", dept:"비교과", subject:"보건실", gender:"여"});
+  add({position:"보건교사", career:4,  months:11, grade:"비담임", dept:"비교과", subject:"보건실", gender:"여"});
+  add({position:"영양교사", career:12, months:24, grade:"비담임", dept:"비교과", subject:"급식실", gender:"여"});
+  add({position:"전문상담교사", career:7, months:12, grade:"비담임", dept:"비교과", subject:"Wee클래스", gender:"남"});
+  add({position:"사서교사", career:9, months:48, grade:"비담임", dept:"비교과", subject:"도서실", gender:"여"});
+  return R;
+}
+$("#btnSample").onclick=()=>{
+  S.teachers = sampleRoster().map(t=>Object.assign({id:uid++},t));
+  S.pinned=[]; S.banned=[]; S.result=null;
+  save(); renderTeachers();
+  const c=n=>S.teachers.filter(t=>t.dept===n).length;
+  msg(`예시 명단 ${S.teachers.length}명을 불러왔습니다. (관리자 ${c("관리자")} · 담임 ${c("담임")} · 부장교사 ${c("부장교사")} · 비교과 ${c("비교과")})`,"o");
+};
+$("#btnSampleDl").onclick=()=>{
+  const R=sampleRoster();
+  const rows=[TPL_HEAD, ...R.map(t=>[t.name,t.gender,t.position,t.career,t.months,t.grade,t.dept,t.subject,t.status])];
+  dl("예시_교사명단_54명.csv",
+     "﻿"+rows.map(r=>r.map(v=>`"${String(v==null?"":v).replace(/"/g,'""')}"`).join(",")).join("\r\n"),
+     "text/csv;charset=utf-8");
+  msg("예시 명단 CSV를 내려받았습니다. 엑셀에서 수정한 뒤 다시 업로드할 수 있습니다.","i");
+};
+
+function msg(text,kind){ $("#loadMsg").innerHTML = `<div class="note ${kind||"i"}">${esc(text)}</div>`; }
+
+/* CSV 양식 */
+const TPL_HEAD = ["성명","성별","직위","교육경력(년)","당해학교근무(개월)","담당학년","구분","기타","재직상태"];
+$("#btnTpl").onclick=()=>{
+  const rows=[TPL_HEAD, ["홍길동","남","교사","12.5","24","5학년","담임","","재직"]];
+  dl("위원선정_명단양식.csv","﻿"+rows.map(r=>r.join(",")).join("\r\n"),"text/csv;charset=utf-8");
+};
+function dl(fn,content,type){
+  const b=new Blob([content],{type:type||"text/plain;charset=utf-8"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download=fn;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+
+/* 파일 업로드 */
+$("#fileIn").onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const ext=f.name.split(".").pop().toLowerCase();
+  if(ext==="csv"){
+    const fr=new FileReader();
+    fr.onload=()=>{
+      let txt;
+      const buf=fr.result, u8=new Uint8Array(buf);
+      if(u8[0]===0xEF&&u8[1]===0xBB&&u8[2]===0xBF){ txt=new TextDecoder("utf-8").decode(buf); }
+      else{
+        txt=new TextDecoder("utf-8",{fatal:false}).decode(buf);
+        if(/�/.test(txt)){ try{ txt=new TextDecoder("euc-kr").decode(buf); }catch(err){} }
+      }
+      ingest(parseCSV(txt));
+    };
+    fr.readAsArrayBuffer(f);
+  }else{
+    if(typeof XLSX==="undefined"){ msg("엑셀 처리 모듈을 불러오지 못했습니다(인터넷 연결 필요). 파일을 CSV로 저장한 뒤 다시 시도해 주세요.","w"); return; }
+    const fr=new FileReader();
+    fr.onload=()=>{ const wb=XLSX.read(new Uint8Array(fr.result),{type:"array"});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      ingest(XLSX.utils.sheet_to_json(ws,{header:1,defval:""})); };
+    fr.readAsArrayBuffer(f);
+  }
+  e.target.value="";
+};
+
+function parseCSV(txt){
+  const rows=[]; let row=[],cell="",q=false;
+  txt=txt.replace(/\r\n/g,"\n").replace(/\r/g,"\n");
+  for(let i=0;i<txt.length;i++){
+    const c=txt[i];
+    if(q){ if(c==='"'){ if(txt[i+1]==='"'){cell+='"';i++;} else q=false; } else cell+=c; }
+    else{ if(c==='"') q=true;
+      else if(c===","){ row.push(cell); cell=""; }
+      else if(c==="\n"){ row.push(cell); rows.push(row); row=[]; cell=""; }
+      else cell+=c; }
+  }
+  if(cell!==""||row.length){ row.push(cell); rows.push(row); }
+  return rows.filter(r=>r.some(x=>String(x).trim()!==""));
+}
+
+const COLMAP=[
+  {f:"name",   keys:["성명","이름","교사명","성 명"]},
+  {f:"gender", keys:["성별"]},
+  {f:"position",keys:["직위","직급","직명","자격"]},
+  {f:"career", keys:["교육경력","경력","총경력"]},
+  {f:"months", keys:["당해학교","당해","본교","현임교","근무개월","근무기간"]},
+  {f:"grade",  keys:["담당학년","학년"]},
+  {f:"dept",   keys:["구분","부서","업무부서","담당부서"]},
+  {f:"subject",keys:["기타","비고","담당교과","교과","과목"]},
+  {f:"status", keys:["재직상태","상태","재직"]}
+];
+function ingest(rows){
+  if(!rows||rows.length<2){ msg("데이터를 읽지 못했습니다. 첫 줄은 열 이름이어야 합니다.","w"); return; }
+  const head=rows[0].map(x=>String(x).replace(/\s|\(.*?\)/g,""));
+  const idx={};
+  COLMAP.forEach(c=>{
+    let k=-1;
+    head.forEach((h,i)=>{ if(k<0 && c.keys.some(key=>h.includes(key.replace(/\s/g,"")))) k=i; });
+    idx[c.f]=k;
+  });
+  if(idx.name<0){ msg("‘성명’ 열을 찾을 수 없습니다. 양식 파일을 참고해 주세요.","w"); return; }
+  const out=[];
+  for(let i=1;i<rows.length;i++){
+    const r=rows[i]; const g=f=>idx[f]>=0?String(r[idx[f]]==null?"":r[idx[f]]).trim():"";
+    const nm=g("name"); if(!nm) continue;
+    let pos=g("position")||"교사"; if(!POSITIONS.includes(pos)){ const m=POSITIONS.find(p=>pos.includes(p.replace("교사",""))&&p!=="교사"); pos=m||"교사"; }
+    let st=g("status")||"재직"; if(!STATUSES.includes(st)) st = /휴직/.test(st)?"휴직":/파견/.test(st)?"파견":/직위/.test(st)?"직위해제":/정직/.test(st)?"정직":"재직";
+    let gr=g("grade"); if(gr && /^\d+$/.test(gr)) gr=gr+"학년";
+    if(gr && !GRADES.includes(gr)){ const m=GRADES.find(x=>x&&gr.includes(x.replace("학년",""))&&x.includes("학년")); gr=m||(/전담/.test(gr)?"전담":/비담임|담임외/.test(gr)?"비담임":""); }
+    let kd=g("dept");
+    if(kd && !KINDS.includes(kd)){
+      kd = /교장|교감|관리/.test(kd) ? "관리자"
+         : /부장/.test(kd) ? "부장교사"
+         : /수석/.test(kd) ? "수석교사"
+         : /비교과|보건|영양|사서|상담/.test(kd) ? "비교과"
+         : /담임|교사/.test(kd) ? "담임" : "";
+    }
+    if(!kd){ // 구분이 비어 있으면 직위로 추정
+      kd = ADMIN.includes(pos) ? "관리자"
+         : pos==="수석교사" ? "수석교사"
+         : NONSUBJ.includes(pos) ? "비교과" : "담임";
+    }
+    out.push({id:uid++, name:nm, gender:g("gender").slice(0,1),
+      position:pos, career:parseFloat(g("career"))||"", months:parseFloat(g("months"))||"",
+      grade:gr, dept:kd, subject:g("subject"), status:st});
+  }
+  if(!out.length){ msg("읽어들일 교사 행이 없습니다.","w"); return; }
+  S.teachers=out; S.pinned=[]; S.banned=[]; S.result=null;
+  save(); renderTeachers(); msg(out.length+"명을 불러왔습니다. 값이 비어 있거나 잘못 인식된 항목은 표에서 수정하세요.","o");
+}
+
+/* ---------------- 프리셋 / 설정 ---------------- */
+function renderPresets(){
+  const box=$("#presetBox"); box.innerHTML="";
+  Object.entries(PRESETS).forEach(([id,p])=>{
+    const b=document.createElement("button");
+    b.className = id===S.presetId?"on":"";
+    b.innerHTML = esc(p.name)+"<small>"+esc(p.short)+"</small>";
+    b.onclick=()=>applyPreset(id);
+    box.appendChild(b);
+  });
+  const p=PRESETS[S.presetId];
+  $("#presetNote").innerHTML = p.note?`<div class="note i">${esc(p.note)}</div>`:"";
+  $("#wrapEval").style.display = p.evalMode?"flex":"none";
+}
+function applyPreset(id){
+  S.presetId=id; const p=PRESETS[id];
+  S.cfg.name=p.name; S.cfg.size=p.size; S.cfg.basis=p.basis;
+  S.cfg.chair=p.chair||"none";
+  S.cfg.genderMix=!!p.genderMix;
+  S.cfg.filters=Object.assign({},p.filters);
+  S.cfg.quotas=expandQuotas(JSON.parse(JSON.stringify(p.quotas)));
+  if(p.evalMode && !S.cfg.evalN) S.cfg.evalN = S.teachers.filter(isRegularTeacher).length;
+  save(); syncCfgUI(); renderPresets(); renderQuotas();
+}
+function isRegularTeacher(t){
+  return !CONTRACT.includes(t.position) && !ADMIN.includes(t.position)
+      && t.position!=="수석교사" && t.status==="재직";
+}
+function syncCfgUI(){
+  $("#cName").value=S.cfg.name||""; $("#cSize").value=S.cfg.size||"";
+  $("#cBasis").value=S.cfg.basis||""; $("#cEvalN").value=S.cfg.evalN||"";
+  const f=S.cfg.filters||{};
+  ["fStatus","fContract","fAdmin","fMaster"].forEach(k=>$("#"+k).checked=!!f[k]);
+  $("#fMonths").value = f.fMonths||0; $("#fCareer").value = f.fCareer||0;
+  $("#fChair").value = S.cfg.chair||"none";
+  $("#fGenderMix").checked = !!S.cfg.genderMix;
+  updateChairNote();
+  updateSizeNote();
+}
+/* 위원장(당연직) */
+function chairPos(){ const c=S.cfg.chair||"none"; return c==="vice"?"교감":c==="principal"?"교장":""; }
+function chairInfo(){
+  const c=S.cfg.chair||"none";
+  if(c==="vice") return {title:"위원장(교감)", name:S.school.vice||"", pos:"교감"};
+  if(c==="principal") return {title:"위원장(교장)", name:S.school.principal||"", pos:"교장"};
+  return null;
+}
+function updateChairNote(){
+  const ci=chairInfo();
+  $("#chairNote").innerHTML = ci
+    ? `${esc(ci.pos)}은(는) 당연직 위원장으로 <b>선정 인원에 포함되지 않으며</b> 후보에서 자동 제외됩니다.`
+    : `위원장을 별도로 두지 않습니다. (다면평가자 선정 등 위원장 개념이 없는 경우)`;
+}
+function bindCfg(){
+  $("#fChair").onchange=()=>{ S.cfg.chair=$("#fChair").value; save(); updateChairNote(); };
+  $("#fGenderMix").onchange=()=>{ S.cfg.genderMix=$("#fGenderMix").checked; save(); renderQuotas(); };
+  $("#cName").oninput=()=>{S.cfg.name=$("#cName").value;save();};
+  $("#cSize").oninput=()=>{S.cfg.size=+$("#cSize").value||0;save();updateSizeNote();updateQuotaNote();};
+  $("#cBasis").oninput=()=>{S.cfg.basis=$("#cBasis").value;save();};
+  $("#cEvalN").oninput=()=>{S.cfg.evalN=+$("#cEvalN").value||0;save();updateSizeNote();
+    const need=raterMin(S.cfg.evalN); if(need && S.cfg.size<need){ S.cfg.size=need; $("#cSize").value=need; save(); updateSizeNote(); }};
+  ["fStatus","fContract","fAdmin","fMaster"].forEach(k=>
+    $("#"+k).onchange=()=>{S.cfg.filters[k]=$("#"+k).checked?1:0;save();});
+  $("#fMonths").oninput=()=>{S.cfg.filters.fMonths=+$("#fMonths").value||0;save();};
+  $("#fCareer").oninput=()=>{S.cfg.filters.fCareer=+$("#fCareer").value||0;save();};
+}
+function updateSizeNote(){
+  const p=PRESETS[S.presetId]; const n=S.cfg.size||0; let out=[];
+  if(p.min||p.max) out.push(`권장·법정 범위: ${p.min}~${p.max}명`);
+  if(p.evalMode){ const need=raterMin(S.cfg.evalN);
+    if(need) out.push(`평가대상자 ${S.cfg.evalN}명 → 법정 최소 <b>${need}명 이상</b>`); }
+  let bad = (p.min&&n<p.min)||(p.max&&n>p.max);
+  if(p.evalMode && raterMin(S.cfg.evalN) && n<raterMin(S.cfg.evalN)) bad=true;
+  $("#sizeNote").innerHTML = out.join(" · ") + (bad?` <b style="color:var(--danger)">⚠ 현재 인원(${n}명)이 기준에 맞지 않습니다.</b>`:"");
+}
+
+/* 쿼터 */
+function renderQuotas(){
+  const box=$("#quotaBox"); box.innerHTML="";
+  let lastAx=null;
+  (S.cfg.quotas||[]).forEach((q,i)=>{
+    if(q.axis!==lastAx){
+      const h=document.createElement("div");
+      h.style.cssText="font-size:11.5px;font-weight:700;color:var(--muted);margin:8px 0 4px";
+      h.textContent=(AXES[q.axis]?AXES[q.axis].label:q.axis);
+      box.appendChild(h); lastAx=q.axis;
+    }
+    const d=document.createElement("div"); d.className="qrow";
+    if((+q.n||0)>0) d.style.cssText="background:var(--accent-soft);border-radius:6px;padding:3px 5px";
+    const axSel=`<select data-k="axis">`+QUOTA_AXES.map(k=>`<option value="${k}"${k===q.axis?" selected":""}>${AXES[k].label}</option>`).join("")+`</select>`;
+    const bk=AXES[q.axis]?AXES[q.axis].buckets:[];
+    const bkSel=`<select data-k="bucket" style="min-width:120px">`+bk.map(b=>`<option${b===q.bucket?" selected":""}>${esc(b)}</option>`).join("")+`</select>`;
+    d.innerHTML = axSel+bkSel+`<input type="number" data-k="n" min="0" style="width:64px" value="${q.n}"> 명 이상`+
+      `<button class="g sm x" data-del="1">×</button>`;
+    d.querySelectorAll("[data-k]").forEach(el=>el.onchange=()=>{
+      const k=el.dataset.k; q[k] = k==="n"?(+el.value||0):el.value;
+      if(k==="axis"){ q.bucket=(AXES[q.axis].buckets[0]||""); }
+      save(); renderQuotas(); });
+    d.querySelector("[data-del]").onclick=()=>{ S.cfg.quotas.splice(i,1); save(); renderQuotas(); };
+    box.appendChild(d);
+  });
+  updateQuotaNote();
+}
+/* 축 안에서는 구간이 서로 배타적이므로, 축별 합계의 최댓값이 '실제 최소 필요 인원' */
+function quotaDemand(){
+  const byAxis={};
+  (S.cfg.quotas||[]).forEach(q=>{ const n=+q.n||0; if(n>0) byAxis[q.axis]=(byAxis[q.axis]||0)+n; });
+  if(S.cfg.genderMix) byAxis.gender=2;
+  const rows=Object.entries(byAxis).map(([ax,n])=>({ax,n,label:ax==="gender"?"성별":AXES[ax].label}));
+  return { rows,
+    sum: rows.reduce((a,r)=>a+r.n,0),
+    min: rows.length? Math.max(...rows.map(r=>r.n)) : 0 };
+}
+function updateQuotaNote(){
+  const d=quotaDemand(), size=S.cfg.size||0;
+  const detail = d.rows.length
+    ? d.rows.map(r=>`${r.label} ${r.n}명`).join(" + ")
+    : "지정된 기준 없음";
+  let html = `<div style="margin-top:8px">지정 합계 <b>${d.sum}명</b> (${detail}) / 선정 인원 <b>${size}명</b></div>`;
+  if(d.min>size){
+    html += `<div class="note w" style="margin-top:8px">⚠ <b>선정 인원을 ${d.min}명 이상으로 늘려야 합니다.</b><br>`+
+      `같은 축(교육경력·담당학년 등) 안의 구간은 한 사람이 하나만 해당하므로 겹칠 수 없습니다. `+
+      `현재 한 축에서만 ${d.min}명이 필요합니다.</div>`;
+  }else if(d.sum>size){
+    html += `<div class="note i" style="margin-top:8px">ℹ 합계(${d.sum}명)가 선정 인원(${size}명)보다 많지만 <b>선정은 가능합니다.</b><br>`+
+      `한 사람이 여러 기준을 동시에 충족할 수 있기 때문입니다. `+
+      `예를 들어 <b>20년 이상 · 5·6학년 담임 · 부장교사</b>인 교사 1명은 세 기준을 한 번에 채웁니다.<br>`+
+      `다만 이런 <b>중복 조건을 갖춘 후보가 없으면 일부 기준이 미충족</b>될 수 있으며, 그 경우 ③ 선정 실행 화면에 어떤 기준이 부족한지 표시됩니다.</div>`;
+  }
+  $("#quotaSum").innerHTML = html;
+}
+$("#btnAddQuota").onclick=()=>{
+  S.cfg.quotas=S.cfg.quotas||[];
+  S.cfg.quotas.push({axis:"dept",bucket:AXES.dept.buckets[1],n:1});
+  save(); renderQuotas();
+};
+$("#btnResetQuota").onclick=()=>{
+  S.cfg.quotas=expandQuotas(JSON.parse(JSON.stringify(PRESETS[S.presetId].quotas)));
+  S.cfg.genderMix=!!PRESETS[S.presetId].genderMix;
+  save(); syncCfgUI(); renderQuotas();
+};
+
+/* ---------------- 후보 판정 ---------------- */
+function eligibility(t){
+  const f=S.cfg.filters||{}; const r=[];
+  if(!String(t.name||"").trim()) r.push("성명 없음");
+  const cp=chairPos();
+  if(cp && t.position===cp) r.push("위원장(당연직)");
+  if(f.fStatus && ["휴직","파견","직위해제","정직"].includes(t.status)) r.push(t.status+" 중");
+  if(f.fContract && CONTRACT.includes(t.position)) r.push("계약제 교원");
+  if(f.fAdmin && ADMIN.includes(t.position)) r.push("관리자");
+  if(f.fMaster && t.position==="수석교사") r.push("수석교사 제외");
+  if(f.fMonths>0 && (+t.months||0) < f.fMonths) r.push(`당해학교 ${f.fMonths}개월 미만`);
+  if(f.fCareer>0 && (+t.career||0) < f.fCareer) r.push(`교육경력 ${f.fCareer}년 미만`);
+  if(S.banned.includes(t.id)) r.push("수동 제외");
+  return r;
+}
+function poolList(){ return S.teachers.filter(t=>eligibility(t).length===0); }
+
+function renderPool(){
+  if(VERIFYING) return;
+  refreshDeptAxis();
+  const tb=$("#tblPool tbody"); tb.innerHTML="";
+  let ok=0;
+  S.teachers.forEach(t=>{
+    const rs=eligibility(t); const good=rs.length===0; if(good) ok++;
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${esc(t.name)}</td><td>${esc(t.position)}</td><td>${esc(t.career)}</td>`+
+      `<td>${esc(t.months)}</td><td>${esc(t.grade)}</td><td>${esc(t.dept)}</td><td>${esc(t.gender)}</td>`+
+      `<td>${good?'<span class="chip ok">후보</span>':'<span class="chip no">'+esc(rs.join(", "))+'</span>'}</td>`+
+      `<td><button class="g sm" data-pin>${S.pinned.includes(t.id)?"고정 해제":"고정"}</button> `+
+      `<button class="g sm" data-ban>${S.banned.includes(t.id)?"제외 해제":"제외"}</button></td>`;
+    tr.querySelector("[data-pin]").onclick=()=>{ tog(S.pinned,t.id); save(); renderPool(); };
+    tr.querySelector("[data-ban]").onclick=()=>{ tog(S.banned,t.id); save(); renderPool(); };
+    tb.appendChild(tr);
+  });
+  const st=$("#poolStat");
+  const p=poolList();
+  st.innerHTML =
+    `<div><b>${S.teachers.length}</b><span>전체 교원</span></div>`+
+    `<div><b>${ok}</b><span>선정 후보</span></div>`+
+    `<div><b>${S.cfg.size||0}</b><span>선정 인원</span></div>`+
+    `<div><b>${S.pinned.length}</b><span>고정</span></div>`+
+    `<div><b>${S.banned.length}</b><span>수동 제외</span></div>`;
+  let w="";
+  const ci=chairInfo();
+  if(ci){
+    const who=S.teachers.find(t=>t.position===ci.pos);
+    w+=`<div class="note i">${esc(ci.title)} <b>${esc(ci.name || (who?who.name:"") || "성명 미입력")}</b> — 당연직으로 후보에서 제외되며 선정 인원 ${S.cfg.size||0}명에 포함되지 않습니다.</div>`;
+  }
+  if(p.length < (S.cfg.size||0)) w+=`<div class="note w">후보(${p.length}명)가 선정 인원(${S.cfg.size}명)보다 적습니다. 자격 조건을 완화하거나 명단을 확인하세요.</div>`;
+  $("#poolWarn").innerHTML=w;
+  renderResult();
+}
+function tog(arr,v){ const i=arr.indexOf(v); if(i<0) arr.push(v); else arr.splice(i,1); }
+
+/* ---------------- 선정 알고리즘 ---------------- */
+function matches(t,q){ const ax=AXES[q.axis]; return ax && ax.of(t)===q.bucket; }
+
+function diversityScore(t,chosen){
+  // 이미 뽑힌 사람과 속성이 겹칠수록 감점
+  let s=100;
+  const w={career:26,grade:24,dept:18,gender:10,kind:14};
+  Object.entries(w).forEach(([k,weight])=>{
+    const v=AXES[k].of(t);
+    const same=chosen.filter(c=>AXES[k].of(c)===v).length;
+    s -= same*weight/Math.max(1,chosen.length);
+  });
+  s += Math.min(+t.months||0,60)/60*4;   // 당해학교 근무 길수록 소폭 가점
+  s += Math.min(+t.career||0,30)/30*3;   // 경력 가점(미세)
+  return s;
+}
+function order(cands,alg,rng,chosen){
+  const a=cands.map(t=>({t,r:rng()}));
+  if(alg==="balanced"){
+    a.forEach(o=>o.s=diversityScore(o.t,chosen)+o.r*0.8);
+    a.sort((x,y)=>y.s-x.s);
+  } else {
+    a.sort((x,y)=>x.r-y.r);
+  }
+  return a.map(o=>o.t);
+}
+function runSelect(){
+  refreshDeptAxis();
+  if(!S.seed) S.seed=newSeed();
+  const rng=mulberry32(hashSeed(S.seed+"|"+S.presetId+"|"+S.cfg.size+"|"+S.teachers.length));
+  const pool=poolList();
+  const size=Math.min(S.cfg.size||0,pool.length);
+  const chosen=[];
+  // 1) 고정 인원
+  S.pinned.forEach(id=>{ const t=pool.find(x=>x.id===id); if(t&&chosen.length<size&&!chosen.includes(t)) chosen.push(t); });
+  // 2) 쿼터 충족 (남·여 배분은 별도 옵션 → 쿼터로 환산)
+  //    한 사람이 여러 기준을 동시에 충족할 수 있으므로,
+  //    ① 후보가 가장 적은(빠듯한) 기준부터 채우고
+  //    ② 다른 미충족 기준까지 함께 만족하는 후보를 우선 선택한다.
+  const effQuotas = (S.cfg.genderMix
+      ? [{axis:"gender",bucket:"남",n:1},{axis:"gender",bucket:"여",n:1}]
+      : []).concat((S.cfg.quotas||[]).filter(q=>(+q.n||0)>0));
+  const track = effQuotas.map(q=>({q, need:(+q.n||0)-chosen.filter(t=>matches(t,q)).length}));
+  let guard=0;
+  while(chosen.length<size && track.some(u=>u.need>0) && guard++<300){
+    let target=null, tcands=null;
+    track.filter(u=>u.need>0).forEach(u=>{
+      const c=pool.filter(t=>!chosen.includes(t)&&matches(t,u.q));
+      if(c.length && (!tcands || c.length<tcands.length)){ target=u; tcands=c; }
+    });
+    if(!target) break;                       // 남은 기준을 채울 후보가 전혀 없음
+    const others=track.filter(u=>u!==target && u.need>0);
+    const ranked=order(tcands,S.algo,rng,chosen)
+      .map(t=>({t, cover: others.filter(u=>matches(t,u.q)).length}));
+    const maxCover=Math.max(...ranked.map(r=>r.cover));
+    const pick=ranked.find(r=>r.cover===maxCover).t;
+    chosen.push(pick);
+    track.forEach(u=>{ if(matches(pick,u.q)) u.need--; });
+  }
+  const unmet=track.filter(u=>u.need>0).map(u=>({q:u.q, need:u.need}));
+  // 3) 잔여 인원
+  while(chosen.length<size){
+    let cands=pool.filter(t=>!chosen.includes(t));
+    if(!cands.length) break;
+    cands=order(cands,S.algo,rng,chosen);
+    chosen.push(cands[0]);
+  }
+  S.result={ ids:chosen.map(t=>t.id), seed:S.seed, algo:S.algo, at:new Date().toISOString(),
+             unmet:unmet.map(u=>u.q.axis==="gender"
+                ? `${u.q.bucket}교사 ${u.need}명 부족(남·여 배분)`
+                : `${AXES[u.q.axis].label} ‘${u.q.bucket}’ ${u.need}명 부족`) };
+  save(); renderPool(); renderResult();
+}
+$("#btnRun").onclick=()=>{ S.algo=$("#algo").value; S.seed=$("#seed").value.trim()||newSeed(); $("#seed").value=S.seed; runSelect(); };
+$("#btnNewSeed").onclick=()=>{ S.seed=newSeed(); $("#seed").value=S.seed; save(); };
+$("#btnReroll").onclick=()=>{ if(!S.result){alert("먼저 선정을 실행하세요.");return;}
+  S.seed=newSeed(); $("#seed").value=S.seed; runSelect(); };
+$("#btnGoDoc").onclick=()=>goTab("t4");
+$("#algo").onchange=()=>{S.algo=$("#algo").value;save();};
+$("#seed").oninput=()=>{S.seed=$("#seed").value;save();};
+
+function selectedTeachers(){
+  if(!S.result) return [];
+  return S.result.ids.map(id=>S.teachers.find(t=>t.id===id)).filter(Boolean);
+}
+function renderResult(){
+  if(VERIFYING) return;
+  const box=$("#resultBox"); box.innerHTML="";
+  const sel=selectedTeachers();
+  $("#cntSel").textContent = sel.length?`${sel.length}명 선정`:"미실행";
+  if(!sel.length){ box.innerHTML=`<div class="hint">아직 선정 결과가 없습니다.</div>`; $("#resultWarn").innerHTML=""; return; }
+  const ci0=chairInfo();
+  if(ci0){
+    const who=S.teachers.find(t=>t.position===ci0.pos);
+    const d=document.createElement("div"); d.className="pcard pin";
+    d.innerHTML=`<div class="nm">${esc(ci0.name || (who?who.name:"") || "성명 미입력")} <span style="font-size:12px;font-weight:400;color:var(--muted)">${esc(ci0.pos)}</span></div>`+
+      `<div class="meta">당연직 위원장 · 선정 인원과 별도<br>${who?esc("경력 "+(who.career||"-")+"년"):"명단에 등록되지 않음"}</div>`+
+      `<div class="badge">위원장</div>`;
+    box.appendChild(d);
+  }
+  sel.forEach(t=>{
+    const d=document.createElement("div");
+    d.className="pcard"+(S.pinned.includes(t.id)?" pin":"");
+    d.innerHTML=`<div class="nm">${esc(t.name)} <span style="font-size:12px;font-weight:400;color:var(--muted)">${esc(t.position)}</span></div>`+
+      `<div class="meta">경력 ${esc(t.career||"-")}년 · 당해학교 ${esc(t.months||"-")}개월<br>${esc(t.grade||"-")} · ${esc(t.dept||"-")} · ${esc(t.gender||"-")}</div>`+
+      `<div class="acts"><button class="g sm" data-pin>${S.pinned.includes(t.id)?"고정 해제":"고정"}</button>`+
+      `<button class="g sm" data-swap>교체</button></div>`+
+      (S.pinned.includes(t.id)?`<div class="badge">고정</div>`:"");
+    d.querySelector("[data-pin]").onclick=()=>{ tog(S.pinned,t.id); save(); renderPool(); };
+    d.querySelector("[data-swap]").onclick=()=>swap(t);
+    box.appendChild(d);
+  });
+  let w="";
+  if(S.result.unmet&&S.result.unmet.length){
+    const d=quotaDemand();
+    w+=`<div class="note w"><b>배분 기준 미충족:</b> ${esc(S.result.unmet.join(" / "))}<br>`+
+       `배분 기준 합계는 ${d.sum}명, 선정 인원은 ${sel.length}명입니다. `+
+       (d.min>sel.length
+         ? `한 축(${esc(d.rows.reduce((a,b)=>a.n>=b.n?a:b).label)})에서만 ${d.min}명이 필요하므로 <b>선정 인원을 ${d.min}명 이상</b>으로 늘려야 합니다.`
+         : `한 사람이 여러 기준을 동시에 충족하면 해결되지만, 지금 후보 중에는 <b>그렇게 겹치는 교사가 없습니다.</b> 선정 인원을 늘리거나 미충족 기준의 인원을 0명으로 낮춰 보세요.`)+
+       `</div>`;
+  }
+  const p=PRESETS[S.presetId];
+  if(p.min&&sel.length<p.min) w+=`<div class="note w">선정 인원이 기준(${p.min}명 이상)에 미달합니다.</div>`;
+  if(p.evalMode){ const need=raterMin(S.cfg.evalN);
+    if(need&&sel.length<need) w+=`<div class="note w">평가대상자 ${S.cfg.evalN}명 기준 법정 최소 ${need}명에 미달합니다.</div>`; }
+  if(S.cfg.genderMix){
+    const m=sel.filter(t=>t.gender==="남").length, fem=sel.filter(t=>t.gender==="여").length;
+    if(m===0||fem===0) w+=`<div class="note w">남·여 배분이 충족되지 않았습니다. (남 ${m}명 · 여 ${fem}명) — 후보 성비를 확인하세요.</div>`;
+  }
+  if(S.presetId==="dmp_com" && !sel.some(t=>NONSUBJ.includes(t.position)))
+    w+=`<div class="note w">보건·영양·사서·전문상담교사가 포함되지 않았습니다. 계획상 1명 이상 참여가 권장됩니다.</div>`;
+  if(!w) w=`<div class="note o">기준을 모두 충족했습니다. 시드 <b>${esc(S.result.seed)}</b> · 방식 ${S.result.algo==="random"?"무작위 추첨":"점수 기반 배정"}</div>`;
+  $("#resultWarn").innerHTML=w;
+}
+function swap(t){
+  const pool=poolList().filter(x=>!S.result.ids.includes(x.id));
+  if(!pool.length){ alert("교체할 후보가 없습니다."); return; }
+  const name=prompt("교체할 대상 이름을 입력하세요.\n가능 후보: "+pool.map(x=>x.name).join(", "));
+  if(!name) return;
+  const nt=pool.find(x=>x.name===name.trim());
+  if(!nt){ alert("후보 목록에 없는 이름입니다."); return; }
+  S.result.ids=S.result.ids.map(id=>id===t.id?nt.id:id);
+  S.pinned=S.pinned.filter(id=>id!==t.id);
+  save(); renderPool();
+}
+
+/* ---------------- 사후 검증 ---------------- */
+function buildRecord(){
+  return {
+    format:"위원선정검증기록", version:1,
+    createdAt:new Date().toISOString(),
+    app:"학교 위원회 위원 자동 선정",
+    school:JSON.parse(JSON.stringify(S.school)),
+    presetId:S.presetId,
+    cfg:JSON.parse(JSON.stringify(S.cfg)),
+    algo:S.algo, seed:S.seed,
+    pinned:(S.pinned||[]).slice(), banned:(S.banned||[]).slice(),
+    teachers:JSON.parse(JSON.stringify(S.teachers)),
+    result:{
+      ids:(S.result&&S.result.ids||[]).slice(),
+      names:selectedTeachers().map(t=>t.name),
+      unmet:(S.result&&S.result.unmet||[]).slice(),
+      at:S.result&&S.result.at
+    }
+  };
+}
+/* 명단·설정을 한 줄로 정규화 → 지문 계산의 기준 */
+function canonicalOf(r){
+  const f=r.cfg&&r.cfg.filters||{};
+  const t=(r.teachers||[]).map(x=>
+    [x.name,x.gender,x.position,x.career,x.months,x.grade,x.dept,x.status].join("|")).join(";");
+  const q=((r.cfg&&r.cfg.quotas)||[]).map(x=>x.axis+":"+x.bucket+":"+(+x.n||0)).join(",");
+  return [ r.presetId, (r.cfg&&r.cfg.size)||0, (r.cfg&&r.cfg.chair)||"none",
+    (r.cfg&&r.cfg.genderMix)?1:0,
+    ["fStatus","fContract","fAdmin","fMaster","fMonths","fCareer"].map(k=>k+"="+(f[k]||0)).join(","),
+    q, r.algo, r.seed, (r.pinned||[]).join("."), (r.banned||[]).join("."),
+    (r.teachers||[]).length, t ].join("§");
+}
+function fingerprintOf(r){
+  const s=canonicalOf(r);
+  const a=hashSeed(s), b=hashSeed(s.length+"|"+s.split("").reverse().join(""));
+  return (a.toString(16).padStart(8,"0")+b.toString(16).padStart(8,"0")).toUpperCase();
+}
+function currentFingerprint(){ try{ return fingerprintOf(buildRecord()); }catch(e){ return "-"; } }
+
+/* 기록된 조건으로 선정을 다시 실행 (현재 작업 상태는 그대로 유지) */
+function replay(rec){
+  const keys=["teachers","presetId","cfg","algo","seed","pinned","banned","result"];
+  const backup={}; keys.forEach(k=>backup[k]=JSON.parse(JSON.stringify(S[k]===undefined?null:S[k])));
+  VERIFYING=true;
+  let out=null, err=null;
+  try{
+    S.teachers=JSON.parse(JSON.stringify(rec.teachers||[]));
+    S.presetId=rec.presetId; S.cfg=JSON.parse(JSON.stringify(rec.cfg||{}));
+    S.algo=rec.algo; S.seed=rec.seed;
+    S.pinned=(rec.pinned||[]).slice(); S.banned=(rec.banned||[]).slice();
+    runSelect();
+    out={ ids:(S.result.ids||[]).slice(), unmet:(S.result.unmet||[]).slice() };
+  }catch(e){ err=e; }
+  finally{ keys.forEach(k=>S[k]=backup[k]); VERIFYING=false; }
+  if(err) throw err;
+  return out;
+}
+
+$("#btnVerSave").onclick=()=>{
+  if(!S.result||!selectedTeachers().length){
+    $("#verSaveMsg").innerHTML=`<div class="note w">③ 선정 실행을 먼저 진행해 주세요.</div>`; return; }
+  const rec=buildRecord();
+  rec.fingerprint=fingerprintOf(rec);
+  const stamp=(rec.createdAt||"").slice(0,10).replace(/-/g,"");
+  dl(`검증기록_${S.school.year||""}_${S.cfg.name||"위원회"}_${stamp}.json`,
+     JSON.stringify(rec,null,2), "application/json;charset=utf-8");
+  $("#verSaveMsg").innerHTML=
+    `<div class="note o"><b>검증 파일을 저장했습니다.</b><br>`+
+    `명단 지문 <b style="font-family:monospace">${esc(rec.fingerprint)}</b> · 시드 <b>${esc(rec.seed)}</b><br>`+
+    `이 파일을 회의록·명단과 같은 폴더에 함께 보관하세요. 파일이 없으면 시드만으로는 검증할 수 없습니다.</div>`;
+};
+$("#btnVerRoster").onclick=()=>{
+  if(!S.teachers.length){ alert("명단이 비어 있습니다."); return; }
+  const rows=[["연번",...TPL_HEAD], ...S.teachers.map((t,i)=>
+    [i+1,t.name,t.gender,t.position,t.career,t.months,t.grade,t.dept,t.subject,t.status])];
+  dl(`선정당시_전체명단_${S.school.year||""}_${S.cfg.name||"위원회"}.csv`,
+     "﻿"+rows.map(r=>r.map(v=>`"${String(v==null?"":v).replace(/"/g,'""')}"`).join(",")).join("\r\n"),
+     "text/csv;charset=utf-8");
+};
+
+$("#verFile").onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const fr=new FileReader();
+  fr.onload=()=>{ let rec;
+    try{ rec=JSON.parse(fr.result); }
+    catch(err){ verReport(`<div class="note w">JSON 파일을 읽을 수 없습니다. 검증 파일이 맞는지 확인해 주세요.</div>`); return; }
+    runVerification(rec);
+  };
+  fr.readAsText(f,"utf-8");
+  e.target.value="";
+};
+function verReport(html){ $("#verReport").innerHTML=html; }
+
+/* 검증 파일의 내용을 실제 작업 상태로 복원 */
+let LAST_REC=null;
+function stateIsEmpty(){
+  return S.teachers.filter(t=>String(t.name||"").trim()).length===0
+      || !S.result || !(S.result.ids||[]).length;
+}
+function loadRecord(rec){
+  if(rec.school) S.school=JSON.parse(JSON.stringify(rec.school));
+  S.teachers=JSON.parse(JSON.stringify(rec.teachers||[]));
+  S.presetId=rec.presetId||"custom";
+  S.cfg=JSON.parse(JSON.stringify(rec.cfg||{}));
+  S.cfg.quotas=expandQuotas(S.cfg.quotas);
+  S.algo=rec.algo||"random"; S.seed=rec.seed||"";
+  S.pinned=(rec.pinned||[]).slice(); S.banned=(rec.banned||[]).slice();
+  S.result={ ids:((rec.result&&rec.result.ids)||[]).slice(), seed:S.seed, algo:S.algo,
+             at:(rec.result&&rec.result.at)||rec.createdAt,
+             unmet:((rec.result&&rec.result.unmet)||[]).slice() };
+  uid=Math.max(1,...S.teachers.map(t=>+t.id||0))+1;
+  save();
+  ["Name","Year","Principal","Vice"].forEach(k=>$("#sch"+k).value=S.school[k.toLowerCase()]||"");
+  $("#algo").value=S.algo; $("#seed").value=S.seed;
+  renderPresets(); syncCfgUI(); renderQuotas(); renderTeachers(); renderPool(); renderDoc();
+}
+function bindLoadBtn(){
+  const b=document.getElementById("btnVerLoad");
+  if(!b) return;
+  b.onclick=()=>{
+    if(!LAST_REC) return;
+    if(!stateIsEmpty() && !confirm("현재 입력된 교사 명단·위원회 설정·선정 결과가 검증 파일의 내용으로 모두 바뀝니다. 계속할까요?")) return;
+    loadRecord(LAST_REC);
+    document.getElementById("verLoadMsg").innerHTML=
+      `<div class="note o"><b>검증 파일의 내용을 불러왔습니다.</b><br>`+
+      `① 교사 명단 ${S.teachers.length}명 · ② 위원회 설정(자격 조건 · 배분 기준 · 위원장) · `+
+      `③ 선정 실행(시드 ${esc(S.seed)} · 선정 ${(S.result.ids||[]).length}명) · ④ 결과 문서가 모두 복원되었습니다. `+
+      `각 탭으로 이동하여 확인하세요.</div>`;
+  };
+}
+
+function runVerification(rec){
+  if(!rec || rec.format!=="위원선정검증기록"){
+    LAST_REC=null;
+    verReport(`<div class="note w">이 앱에서 저장한 검증 파일이 아닙니다.</div>`); return; }
+  LAST_REC=rec;
+  const wasEmpty=stateIsEmpty();
+  const saved=rec.fingerprint||"";
+  const calc=fingerprintOf(rec);
+  const intact = saved && saved===calc;
+
+  let re=null, runErr=null;
+  try{ re=replay(rec); }catch(e){ runErr=e; }
+
+  const recIds=(rec.result&&rec.result.ids||[]).map(String);
+  const newIds=re?re.ids.map(String):[];
+  const sameSet = recIds.length===newIds.length &&
+    recIds.slice().sort().join(",")===newIds.slice().sort().join(",");
+  const sameOrder = recIds.join(",")===newIds.join(",");
+
+  const nameOf=id=>{ const t=(rec.teachers||[]).find(x=>String(x.id)===String(id)); return t?t.name:"(알 수 없음)"; };
+  const recNames=recIds.map(nameOf), newNames=newIds.map(nameOf);
+  const onlyRec=recNames.filter(n=>!newNames.includes(n));
+  const onlyNew=newNames.filter(n=>!recNames.includes(n));
+
+  const badge=(ok,txt)=>`<span class="chip ${ok?"ok":"no"}">${txt}</span>`;
+  const pass = intact && sameSet && !runErr;
+
+  let html = pass
+    ? `<div class="note o" style="font-size:14px"><b>✔ 검증 성공</b> — 기록된 조건으로 다시 실행한 결과가 보관된 명단과 정확히 일치합니다.`+
+      (sameOrder?"":" (나열 순서만 다르며 구성원은 동일합니다.)")+`</div>`
+    : `<div class="note w" style="font-size:14px"><b>✘ 검증 실패</b> — 아래 항목을 확인해 주세요.</div>`;
+
+  html += `<table style="margin-bottom:14px"><tbody>`+
+    `<tr><th style="width:130px">학교 · 위원회</th><td style="text-align:left">`+
+      `${esc(rec.school&&rec.school.name||"-")} / ${esc(rec.school&&rec.school.year||"-")}학년도 ${esc(rec.cfg&&rec.cfg.name||"-")}</td></tr>`+
+    `<tr><th>선정 일시</th><td style="text-align:left">${esc((rec.result&&rec.result.at||rec.createdAt||"").replace("T"," ").slice(0,19))}</td></tr>`+
+    `<tr><th>선정 방식</th><td style="text-align:left">${rec.algo==="random"?"조건 충족 후 무작위 추첨":"점수 기반 자동 배정"}</td></tr>`+
+    `<tr><th>추첨 식별번호</th><td style="text-align:left"><b>${esc(rec.seed||"-")}</b></td></tr>`+
+    `<tr><th>명단 규모</th><td style="text-align:left">전체 ${(rec.teachers||[]).length}명 · 선정 ${recIds.length}명</td></tr>`+
+    `</tbody></table>`;
+
+  html += `<table style="margin-bottom:14px"><thead><tr><th style="width:150px">검증 항목</th><th style="width:110px">결과</th><th>내용</th></tr></thead><tbody>`+
+    `<tr><td>① 파일 무결성</td><td>${badge(intact, intact?"정상":"변조 의심")}</td>`+
+      `<td style="text-align:left;font-family:monospace;font-size:11.5px">저장된 지문 ${esc(saved||"(없음)")}<br>재계산 지문 ${esc(calc)}</td></tr>`+
+    `<tr><td>② 재실행 성공</td><td>${badge(!runErr, runErr?"오류":"정상")}</td>`+
+      `<td style="text-align:left">${runErr?esc(String(runErr.message||runErr)):"기록된 조건으로 선정을 다시 실행했습니다."}</td></tr>`+
+    `<tr><td>③ 명단 일치</td><td>${badge(sameSet, sameSet?"일치":"불일치")}</td>`+
+      `<td style="text-align:left">${sameSet
+        ? (sameOrder?"선정자와 순서가 모두 동일합니다.":"선정자는 동일하며 나열 순서만 다릅니다.")
+        : `기록에만 있음: ${esc(onlyRec.join(", ")||"-")} / 재실행에만 있음: ${esc(onlyNew.join(", ")||"-")}`}</td></tr>`+
+    `</tbody></table>`;
+
+  html += `<table><thead><tr><th style="width:56px">연번</th><th>보관된 명단</th><th>재실행 결과</th><th style="width:70px">대조</th></tr></thead><tbody>`+
+    recNames.map((n,i)=>{
+      const m=newNames[i]||"-";
+      const same=(n===m)|| (newNames.includes(n));
+      return `<tr><td>${i+1}</td><td>${esc(n)}</td><td>${esc(m)}</td>`+
+        `<td>${same?'<span class="chip ok">✓</span>':'<span class="chip no">✗</span>'}</td></tr>`;
+    }).join("")+`</tbody></table>`;
+
+  if(!intact){
+    html += `<div class="note w" style="margin-top:12px"><b>지문이 다릅니다.</b> 검증 파일의 명단이나 설정이 저장 이후 수정되었을 가능성이 있습니다. `+
+      `원본 파일을 다시 확인하고, 회의록에 인쇄된 지문과 대조해 보세요.</div>`;
+  }else if(!sameSet){
+    html += `<div class="note w" style="margin-top:12px"><b>파일은 정상이나 결과가 다릅니다.</b> `+
+      `선정 이후 앱이 갱신되어 선정 방식이 달라졌을 수 있습니다. 선정 당시 사용한 앱 파일로 다시 검증해 주세요.</div>`;
+  }else{
+    html += `<div class="note i" style="margin-top:12px">이 결과 화면을 인쇄하거나 캡처하여 검증 근거로 보관할 수 있습니다.</div>`;
+  }
+
+  html += `<div class="card" style="margin:16px 0 0;background:#f7f8fa">`+
+    `<h2 style="margin-bottom:4px">이 파일의 내용 불러오기</h2>`+
+    `<div class="desc">검증 파일에는 선정 당시의 <b>교사 명단 ${(rec.teachers||[]).length}명, 위원회 설정, 선정 결과</b>가 모두 들어 있습니다. `+
+    `불러오면 ①~④ 탭이 선정 당시 상태로 복원되어 명단·기준·결과·회의록을 그대로 확인하고 다시 인쇄할 수 있습니다.</div>`+
+    `<button class="b" id="btnVerLoad">교사 명단 · 설정 · 결과 모두 불러오기</button>`+
+    `<div id="verLoadMsg" style="margin-top:10px"></div></div>`;
+
+  verReport(html);
+
+  if(wasEmpty){
+    loadRecord(rec);
+    $("#verLoadMsg").innerHTML=
+      `<div class="note o"><b>작업 내용이 비어 있어 자동으로 불러왔습니다.</b><br>`+
+      `① 교사 명단 ${S.teachers.length}명 · ② 위원회 설정 · ③ 선정 실행(시드 ${esc(S.seed)}) · ④ 결과 문서가 모두 복원되었습니다.</div>`;
+  }
+  bindLoadBtn();
+}
+
+/* ---------------- 문서 (공공 보존 공문서 표준 서식) ---------------- */
+const DS = {
+  wrap : `max-width:720px;margin:0 auto;font-family:"Malgun Gothic","맑은 고딕",sans-serif;color:#1a1a1a`,
+  badge: `display:block;width:210px;margin:0 auto 18px;padding:5px 0;text-align:center;`+
+         `border:1px solid #c9cdd4;border-radius:99px;font-size:10.5px;color:#6b7684;letter-spacing:.5px`,
+  title: `text-align:center;font-size:23px;font-weight:700;letter-spacing:-.5px;margin:0 0 26px;color:#1b2a4a`,
+  tbl  : `width:100%;border-collapse:collapse;border-top:1.6px solid #3d4a63;border-bottom:1.6px solid #3d4a63;margin-bottom:30px`,
+  th   : `width:96px;padding:9px 6px;text-align:center;font-size:11.5px;font-weight:700;color:#3d4a63;`+
+         `background:#f7f8fa;border-bottom:1px solid #e3e6ea;white-space:nowrap`,
+  td   : `padding:9px 12px;font-size:12px;border-bottom:1px solid #e3e6ea;line-height:1.6`,
+  sec  : `font-size:14.5px;font-weight:700;color:#1b2a4a;margin:26px 0 12px;padding-bottom:7px;border-bottom:1px solid #d7dbe0`,
+  sub  : `font-size:12.5px;font-weight:700;margin:16px 0 7px;color:#1a1a1a`,
+  p    : `font-size:12px;line-height:1.85;margin:0 0 11px;text-align:justify`,
+  lst  : `font-size:12px;line-height:1.8;margin:0 0 12px;padding-left:20px`,
+  rt   : `width:100%;border-collapse:collapse;margin:10px 0 14px;font-size:11.5px`,
+  rth  : `padding:6px 4px;background:#f2f4f7;border:1px solid #dfe3e8;font-weight:700;text-align:center;white-space:nowrap`,
+  rtd  : `padding:6px 4px;border:1px solid #dfe3e8;text-align:center`,
+  sign : `margin-top:40px;text-align:center;font-size:12.5px;line-height:2.6`
+};
+function docHTML(){
+  const sel=selectedTeachers();
+  const sc=S.school;
+  const d=$("#docDate").value||todayISO(), place=$("#docPlace").value||"교무실";
+  const time=$("#docTime").value||"", kind=$("#docKind").value||"정기 회의";
+  const seq=($("#docSeq").value||"").trim(), odept=$("#docDept").value||"교무기획부";
+  const extra=($("#docAttend").value||"").trim();
+  const type=$("#docType").value;
+  const title=`${sc.year||""}학년도 ${S.cfg.name||"위원회"}`;
+  const algoTxt = S.result? (S.result.algo==="random"?"조건 충족 후 무작위 추첨":"항목별 균형 점수에 따른 자동 배정") : "-";
+  const filters=[];
+  const f=S.cfg.filters||{};
+  if(f.fStatus) filters.push("휴직·파견·직위해제·정직 중인 교사 제외");
+  if(f.fContract) filters.push("계약제 교원(기간제·산학겸임·강사) 제외");
+  if(f.fAdmin) filters.push("관리자(교장·교감) 제외");
+  if(f.fMaster) filters.push("수석교사 제외");
+  if(f.fMonths>0) filters.push(`당해학교 실근무 ${f.fMonths}개월 이상`);
+  if(f.fCareer>0) filters.push(`교육경력 ${f.fCareer}년 이상`);
+  const quotas=(S.cfg.genderMix?["남교사·여교사 각 1명 이상 포함(남·여 배분)"]:[])
+    .concat((S.cfg.quotas||[]).filter(q=>(+q.n||0)>0)
+      .map(q=>`${AXES[q.axis].label} ‘${q.bucket}’ ${q.n}명 이상`));
+
+  const fp = currentFingerprint();
+  const ci=chairInfo();
+  const chairMan = S.teachers.find(t=>ci && t.position===ci.pos);
+  const chairName = ci ? (ci.name || (chairMan?chairMan.name:"")) : "";
+  const chairLine = ci ? `${ci.pos} ${chairName}` : "미지정(위원 중 호선)";
+
+  /* 선정 명단 표 */
+  const rosterTable = sel.length
+    ? `<table style="${DS.rt}"><thead><tr>`+
+      ["연번","성명","직위","교육경력","당해학교","담당학년","구분"]
+        .map(h=>`<th style="${DS.rth}">${h}</th>`).join("")+
+      `</tr></thead><tbody>`+
+      sel.map((t,i)=>`<tr>`+
+        [i+1, t.name, t.position, (t.career||"-")+"년", (t.months||"-")+"개월", t.grade||"-", t.dept||"-"]
+          .map((v,j)=>`<td style="${DS.rtd}${j===1?";font-weight:700":""}">${esc(v)}</td>`).join("")+
+        `</tr>`).join("")+
+      `</tbody></table>`
+    : `<p style="${DS.p}">(선정 결과 없음)</p>`;
+
+  /* 서명란 */
+  const signRows = (()=>{
+    const c=S.cfg.chair||"none"; const L=[];
+    if(c==="vice"){ L.push(["위원장 (교감)",chairName]); L.push(["확인자 (교장)",sc.principal||""]); }
+    else if(c==="principal"){ L.push(["위원장 (교장)",chairName]); if(sc.vice) L.push(["간　사 (교감)",sc.vice]); }
+    else { L.push(["작성자 (교감)",sc.vice||""]); L.push(["확인자 (교장)",sc.principal||""]); }
+    return L;
+  })();
+  const signBlock = `<div style="${DS.sign}">`+
+    `<div style="margin-bottom:14px">${esc(korDate(d))}</div>`+
+    `<div style="font-weight:700;font-size:14px;margin-bottom:18px">${esc(sc.name||"")} ${esc(S.cfg.name||"위원회")}</div>`+
+    signRows.map(([k,v])=>`<div>${esc(k)}　　${esc(v)}　　(인)</div>`).join("")+
+    `</div>`;
+
+  const head = (rows)=>`<table style="${DS.tbl}"><tbody>`+rows+`</tbody></table>`;
+  const r2 = (k,v)=>`<tr><th style="${DS.th}">${k}</th><td style="${DS.td}" colspan="3">${v}</td></tr>`;
+  const r4 = (k1,v1,k2,v2)=>`<tr><th style="${DS.th}">${k1}</th><td style="${DS.td}">${v1}</td>`+
+    `<th style="${DS.th}">${k2}</th><td style="${DS.td}">${v2}</td></tr>`;
+  const shell = (title,body)=>`<div style="${DS.wrap}">`+
+    `<div style="${DS.badge}">공공 보존 공문서 표준 서식</div>`+
+    `<h1 style="${DS.title}">${title}</h1>${body}</div>`;
+
+  /* ---------- 위원 명단 ---------- */
+  if(type==="roster"){
+    return shell(`${esc(sc.year||"")}학년도 ${esc(S.cfg.name||"위원회")} 위원 명단`,
+      head(
+        r4("기 관 명", esc(sc.name||""), "작 성 일", esc(korDate(d)))+
+        r2("근　　거", esc(S.cfg.basis||"-"))+
+        r4("위 원 장", esc(chairLine)+" (당연직)", "위원 수", `<b>${sel.length}명</b>`+(ci?` (위원장 별도)`:""))+
+        r4("추첨 식별번호", `<span style="font-family:monospace">${esc(S.result?S.result.seed:"-")}</span>`,
+           "명단 지문", `<span style="font-family:monospace">${esc(fp)}</span>`)
+      )+
+      `<h2 style="${DS.sec}">1. 위원 명단</h2>`+rosterTable+
+      `<p style="${DS.p}">위와 같이 선정되었음을 확인합니다.</p>`+signBlock);
+  }
+
+  /* ---------- 선정 결과 알림장 ---------- */
+  if(type==="notice"){
+    return shell(`${esc(sc.year||"")}학년도 ${esc(S.cfg.name||"위원회")} 위원 선정 결과 알림`,
+      head(
+        r4("기 관 명", esc(sc.name||""), "문서 구분", "내부 알림")+
+        r2("관　　련", esc(S.cfg.basis||"-"))+
+        r4("선 정 일", esc(korDate(d)), "선정 인원", `<b>${sel.length}명</b>`)
+      )+
+      `<h2 style="${DS.sec}">1. 알림 내용</h2>`+
+      `<p style="${DS.p}">${esc(sc.year||"")}학년도 ${esc(S.cfg.name||"위원회")} 위원(평가자)이 다음과 같이 선정되었기에 알려 드립니다. `+
+      `선정은 사전에 정한 자격 요건과 배분 기준에 따라 <b>${esc(algoTxt)}</b> 방식으로 진행하였으며`+
+      `${S.result?`, 추첨 식별번호(시드) <b>${esc(S.result.seed)}</b> 및 명단 지문 <b style="font-family:monospace">${esc(fp)}</b>를 기록하여 사후 검증이 가능하도록 하였습니다`:""}.</p>`+
+      rosterTable+
+      `<h2 style="${DS.sec}">2. 협조 및 유의사항</h2>`+
+      `<ol style="${DS.lst}">`+
+      `<li>평가(심의)의 공정성과 객관성 확보를 위해 관련 정보의 대외 보안을 유지하여 주시기 바랍니다.</li>`+
+      `<li>위원(평가자) 대상 사전 연수에 반드시 참석하여 주시기 바랍니다.</li>`+
+      `<li>학연·지연 등 사적 관계에 얽매이지 않는 공정한 평가가 이루어지도록 협조하여 주시기 바랍니다.</li>`+
+      `</ol>`+
+      `<div style="${DS.sign}"><div style="margin-bottom:14px">${esc(korDate(d))}</div>`+
+      `<div style="font-weight:700;font-size:15px">${esc(sc.name||"")} 교장　${esc(sc.principal||"")}　(직인생략)</div></div>`);
+  }
+
+  /* ---------- 선정 회의록 ---------- */
+  const attendees = [
+    sc.principal?`교장 ${sc.principal}`:"",
+    sc.vice?`교감 ${sc.vice}`:"",
+    extra
+  ].filter(Boolean).join(", ") || "관계 교직원";
+
+  const agenda = `안건 1. ${S.cfg.name||"위원회"} 위원(평가자) 선정 기준 확정 및 선정의 건`;
+  const evalLine = PRESETS[S.presetId].evalMode && S.cfg.evalN
+    ? ` 평가대상자는 ${S.cfg.evalN}명으로, 「교육공무원 승진규정」상 다면평가자 법정 최소 인원은 ${raterMin(S.cfg.evalN)}명입니다.` : "";
+
+  const body =
+    head(
+      r4("기 관 명", esc(sc.name||""), "회의 구분", esc(kind))+
+      r2("회의 목적", esc(`${sc.year||""}학년도 ${S.cfg.name||"위원회"} 위원(평가자) 선정 기준 확정 및 선정`))+
+      r2("일시 및 장소", `<b>${esc(korDate(d))}${time?" "+esc(time):""} / ${esc(sc.name||"")} ${esc(place)}</b>`)+
+      r2("진행 순서", `<b>개회-경과보고-안건 심의 및 토론-선정-폐회</b>`)+
+      r4("주관 부서", `<b>${esc(odept)}</b>`, "위원장", `<b>${esc(chairLine)}</b>`)+
+      r2("내부 참석자", esc(attendees))+
+      r2("회의 안건", `<b>${esc(agenda)}</b>`)
+    )+
+    `<h2 style="${DS.sec}">1. 회의 진행 내용</h2>`+
+    `<h3 style="${DS.sub}">1. ${esc(agenda.replace(/^안건 1\.\s*/,""))}</h3>`+
+    `<p style="${DS.p}">본 안건은 ${esc(S.cfg.basis||"관련 규정")}에 따라 ${esc(S.cfg.name||"위원회")} 위원(평가자)을 선정하기 위하여 상정되었습니다. `+
+      `위원장은 선정의 공정성과 객관성을 확보하기 위하여 사전에 정한 자격 요건과 배분 기준을 먼저 확정한 뒤, `+
+      `주관적 판단이 개입되지 않는 방식으로 선정할 것을 제안하였습니다.${evalLine}</p>`+
+    `<p style="${DS.p}"><b>후보 자격 기준</b>에 관하여는 `+
+      `${filters.length
+        ? `다음의 요건을 적용하기로 하였습니다. ${esc(filters.join(", "))}.`
+        : `별도의 제한을 두지 않기로 하였습니다.`} `+
+      `이에 따라 전체 교원 ${S.teachers.length}명 중 자격 요건을 충족하는 후보는 <b>${poolList().length}명</b>으로 확인되었습니다.</p>`+
+    `<p style="${DS.p}"><b>배분(구성) 기준</b>에 관하여는 `+
+      `${quotas.length
+        ? `다음의 기준을 적용하기로 하였습니다. ${esc(quotas.join(", "))}. `+
+          `한 사람이 교육경력·담당학년·구분 등 여러 기준을 동시에 충족할 수 있으므로, `+
+          `기준의 합계가 선정 인원을 넘더라도 중복 충족을 통해 구성이 가능함을 확인하였습니다.`
+        : `별도의 배분 기준을 두지 않고, 자격 요건을 충족하는 후보 전체를 대상으로 선정하기로 하였습니다.`}</p>`+
+    `<p style="${DS.p}"><b>선정 방법</b>은 「${esc(algoTxt)}」 방식으로 하되, 자격 요건에 따른 후보 연명부를 작성한 후 `+
+      `배분 기준을 적용하는 절차로 진행하였습니다. `+
+      `${S.result?`추첨 식별번호(시드) <b>${esc(S.result.seed)}</b>와 명단 지문 <b style="font-family:monospace">${esc(fp)}</b>를 회의록에 기록하여, 동일한 명단·기준·식별번호로 재실행할 경우 같은 결과가 산출되도록 하였습니다. 이를 통해 선정 결과의 사후 검증이 가능합니다. `:""}`+
+      `또한 학연·지연 등 사적 관계가 개입되지 않도록 선정 과정에서 정성적 판단을 최소화하였습니다.</p>`+
+    `<p style="${DS.p}">논의 결과 아래와 같이 <b>${sel.length}명</b>이 선정되었으며`+
+      `${ci?`, ${esc(chairLine)}은 당연직 위원장으로 선정 인원과 별도입니다`:""}. `+
+      `참석자 전원의 구두합의를 통해 이의 없이 확정되었습니다.</p>`+
+    rosterTable+
+    (S.result && S.result.unmet && S.result.unmet.length
+      ? `<p style="${DS.p}">※ 배분 기준 중 ${esc(S.result.unmet.join(", "))} 항목은 해당 조건을 충족하는 후보가 없어 충족하지 못하였으며, `+
+        `이에 대하여 참석자 전원이 불가피함을 확인하였습니다.</p>` : "")+
+    `<h2 style="${DS.sec}">2. 최종 의결 및 결정사항</h2>`+
+    `<ol style="${DS.lst}">`+
+    `<li>${esc(S.cfg.name||"위원회")} 위원(평가자) <b>${sel.length}명</b>을 위 명단과 같이 선정 `+
+      `<span style="color:#6b7684">(의결 방식: 구두합의 / 결과: 만장일치 찬성)</span></li>`+
+    `<li>선정된 위원(평가자)을 대상으로 사전 연수를 실시하고, 평가(심의) 관련 정보의 대외 보안 유지를 안내 `+
+      `<span style="color:#6b7684">(의결 방식: 구두합의 / 결과: 만장일치 찬성)</span></li>`+
+    `<li>본 회의록 및 선정 관련 자료(검증 파일 포함)는 학교 자체 보관하고, 평가 종료 후 규정에 따라 관리 `+
+      `<span style="color:#6b7684">(의결 방식: 구두합의 / 결과: 만장일치 찬성)</span></li>`+
+    `</ol>`+
+    signBlock;
+
+  return shell(`${esc(seq?seq+" ":"")}${esc(S.cfg.name||"위원회")} 위원 선정 회의`, body);
+}
+
+function renderDoc(){
+  if(!S.result||!selectedTeachers().length){
+    $("#docview").innerHTML=`<div style="color:#6b7684;font-size:13px">③ 선정 실행을 먼저 진행해 주세요.</div>`; return; }
+  $("#docview").innerHTML = docHTML();
+}
+["docType","docDate","docTime","docPlace","docKind","docSeq","docDept","docAttend"].forEach(id=>{
+  const el=$("#"+id); if(el){ el.onchange=renderDoc; el.oninput=renderDoc; } });
+$("#btnPrint").onclick=()=>{ renderDoc(); window.print(); };
+$("#btnCopy").onclick=async()=>{ renderDoc();
+  try{ await navigator.clipboard.writeText($("#docview").innerText); alert("본문을 복사했습니다."); }
+  catch(e){ alert("복사에 실패했습니다. 본문을 직접 선택해 복사해 주세요."); } };
+$("#btnWord").onclick=()=>{
+  const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word">`+
+    `<head><meta charset="utf-8"><title>회의록</title>`+
+    `<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View></w:WordDocument></xml><![endif]-->`+
+    `<style>@page{size:A4;margin:2cm 1.8cm} body{font-family:"맑은 고딕",sans-serif;font-size:10.5pt}</style>`+
+    `</head><body>${docHTML()}</body></html>`;
+  dl(`${S.school.year||""}_${S.cfg.name||"위원회"}_${$("#docType").selectedOptions[0].text}.doc`,"﻿"+html,"application/msword");
+};
+$("#btnCsv").onclick=()=>{
+  const sel=selectedTeachers();
+  if(!sel.length){ alert("선정 결과가 없습니다."); return; }
+  const rows=[["연번",...TPL_HEAD], ...sel.map((t,i)=>[i+1,t.name,t.gender,t.position,t.career,t.months,t.grade,t.dept,t.subject,t.status])];
+  dl(`${S.school.year||""}_${S.cfg.name||"위원회"}_명단.csv`,
+     "﻿"+rows.map(r=>r.map(v=>`"${String(v==null?"":v).replace(/"/g,'""')}"`).join(",")).join("\r\n"),
+     "text/csv;charset=utf-8");
+};
+
+/* ---------------- 초기화 ---------------- */
+(function init(){
+  const had=load();
+  if(!had){ applyPreset("dmp_com"); S.teachers=[blankT(),blankT(),blankT()]; }
+  if(!S.cfg.filters||!Object.keys(S.cfg.filters).length) applyPreset(S.presetId);
+  if(!S.cfg.chair) S.cfg.chair = (PRESETS[S.presetId]||{}).chair || "none";
+  // 이전 버전에서 성별 쿼터를 쓰던 설정 → 남·여 배분 체크로 이전
+  if((S.cfg.quotas||[]).some(q=>q.axis==="gender")){
+    S.cfg.genderMix=true;
+    S.cfg.quotas=S.cfg.quotas.filter(q=>q.axis!=="gender");
+  }
+  S.cfg.quotas=expandQuotas(S.cfg.quotas);
+  if(!S.seed) S.seed=newSeed();
+  ["Name","Year","Principal","Vice"].forEach(k=>$("#sch"+k).value=S.school[k.toLowerCase()]||"");
+  $("#schYear").value=S.school.year||"2026";
+  $("#algo").value=S.algo||"random"; $("#seed").value=S.seed;
+  $("#docDate").value=todayISO();
+  bindCfg(); renderPresets(); syncCfgUI(); renderTeachers(); renderQuotas();
+  save();
+})();
+</script>
+</body>
+</html>
