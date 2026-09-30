@@ -28,6 +28,7 @@ header .hd-txt{min-width:280px}
 header h1{font-size:24px;line-height:1.2;margin:0;font-weight:800;letter-spacing:-1px;color:#fff;
   text-shadow:0 2px 6px rgba(0,0,0,.28)}
 header .hd-sub{margin:6px 0 0;font-size:12.5px;color:#c3d0ea;letter-spacing:-.2px}
+header .hd-ver{margin:4px 0 0;font-size:11.5px;color:#9fb1d6;letter-spacing:-.1px}
 header .sch{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 label.sf{display:flex;align-items:center;gap:6px;font-size:12px;color:#cfdaf0;font-weight:700;white-space:nowrap}
 label.sf input{padding:6px 9px;border:1px solid rgba(255,255,255,.28);border-radius:6px;font-size:13px;
@@ -112,6 +113,44 @@ td input:focus,td select:focus{border-color:var(--accent);background:#fff;outlin
 .stat b{display:block;font-size:20px;line-height:1.2}
 .stat span{font-size:11.5px;color:var(--muted)}
 .hint{font-size:11.5px;color:var(--muted);margin-top:5px}
+.svdoc{font-family:"Malgun Gothic","맑은 고딕",sans-serif;color:#1a1a1a;font-size:13px;line-height:1.6}
+.svdoc .sheet+.sheet{page-break-before:always;margin-top:36px}
+.svdoc h1{font-size:19px;text-align:center;margin:0 0 6px;letter-spacing:-.3px}
+.svdoc .guide{text-align:center;color:#444;margin-bottom:14px}
+.svdoc h3{font-size:14px;margin:16px 0 6px}
+.svdoc table{width:100%;border-collapse:collapse;font-size:13px}
+.svdoc td{border:1px solid #999;padding:7px 9px;text-align:left;width:20%}
+.svdoc tr{page-break-inside:avoid}
+.svdoc.one{font-size:11.5px;line-height:1.45}
+.svdoc.one h1{font-size:17px;margin-bottom:3px}
+.svdoc.one .guide{margin-bottom:6px}
+.svdoc.one h2{font-size:13px;margin:10px 0 4px}
+.svdoc .cmp th{border:1px solid #999;background:#f3f3f3;padding:3px 5px;width:13%;font-size:11.5px;font-weight:700;text-align:center}
+.svdoc .cmp th small{display:block;font-weight:400;color:#555}
+.svdoc .cmp td{padding:4px 6px;width:14.5%;font-size:11.5px}
+details.svfair{margin:14px 0 0;border-radius:8px;background:var(--warn-soft);color:#5c3b00;font-size:13px;line-height:1.65}
+details.svfair summary{cursor:pointer;padding:10px 13px;font-weight:700;color:var(--warn)}
+details.svfair .in{padding:0 15px 12px}
+details.svfair h4{font-size:13px;margin:10px 0 3px;color:#3d2800}
+details.svfair p{margin:0 0 4px}
+details.svfair .ex{background:#fff;border-radius:6px;padding:7px 10px;margin:5px 0;font-size:12.5px}
+#updModal{position:fixed;inset:0;background:rgba(15,23,40,.55);z-index:100;display:none;
+  align-items:center;justify-content:center;padding:16px}
+#updModal.on{display:flex}
+#updModal .box{background:#fff;border-radius:12px;max-width:620px;width:100%;max-height:calc(100vh - 32px);
+  overflow:auto;box-shadow:0 18px 50px rgba(0,0,0,.3)}
+#updModal .top{background:linear-gradient(120deg,#16233d,#2f4b85);color:#fff;padding:16px 20px;border-radius:12px 12px 0 0}
+#updModal .top b{font-size:17px;display:block}
+#updModal .top span{font-size:12px;color:#c3d0ea}
+#updModal .bd{padding:14px 20px 4px;font-size:13.5px;line-height:1.65}
+#updModal ol{margin:0;padding-left:20px}
+#updModal li{margin-bottom:9px}
+#updModal li small{display:block;color:var(--muted);font-size:12px}
+#updModal .ft{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  padding:12px 20px 16px;border-top:1px solid var(--line)}
+#updModal .ft label{font-size:12.5px;color:var(--muted);display:flex;gap:6px;align-items:center;cursor:pointer}
+header .hd-ver a{color:#c3d0ea;text-decoration:underline;cursor:pointer;margin-left:6px}
+#svPreview{margin-top:14px;border:1px solid var(--line);border-radius:8px;padding:22px 26px;max-height:460px;overflow:auto;background:#fff}
 @media print{
   @page{size:A4;margin:16mm 15mm}
   header,nav,.card,.noprint{display:none!important}
@@ -179,6 +218,7 @@ td input:focus,td select:focus{border-color:var(--accent);background:#fff;outlin
     <div class="hd-txt">
       <h1>학교 위원회 위원 자동 선정</h1>
       <p class="hd-sub">다면평가 계획에 따른 위원 · 평가자 선정 및 학교 내 각종 위원회 위원 자동 선정 도구</p>
+      <p class="hd-ver">버전 3.0 · 업데이트 2026. 9. 30. <a id="lnkUpd">업데이트 내용 보기</a></p>
     </div>
     <div class="sch">
       <label class="sf">초등학교명<input id="schName" placeholder="예: 모산초등학교" style="width:150px"></label>
@@ -214,7 +254,7 @@ td input:focus,td select:focus{border-color:var(--accent);background:#fff;outlin
       <button class="g org warm" id="btnClear">전체 삭제</button>
       <button class="g org" id="btnTpl">양식 파일 내려받기(CSV)</button>
     </div>
-    <div class="note i">인식 가능한 열 이름: <b>성명 / 성별 / 직위 / 교육경력(년) / 당해학교근무(개월) / 담당학년 / 구분 / 기타 / 재직상태</b> — 열 순서는 달라도 되며, 없는 열은 비워 두면 됩니다. <b>구분</b>은 관리자 · 담임 · 부장교사 · 수석교사 · 비교과 중 하나입니다.</div>
+    <div class="note i">인식 가능한 열 이름: <b>성명 / 성별 / 직위 / 교육경력(년) / 당해학교근무(개월) / 담당학년 / 구분 / 기타 / 선호도조사 / 재직상태</b> — 열 순서는 달라도 되며, 없는 열은 비워 두면 됩니다. <b>구분</b>은 관리자 · 담임 · 부장교사 · 수석교사 · 비교과 중 하나입니다.</div>
     <div id="loadMsg"></div>
   </div>
 
@@ -222,7 +262,7 @@ td input:focus,td select:focus{border-color:var(--accent);background:#fff;outlin
     <h2 class="big30">교사 명단 <span id="cntAll" class="chip n"></span></h2>
     <div class="row mb">
       <button class="b sm" id="btnAddRow">+ 교사 추가</button>
-      <span class="hint">직위·재직상태·담당학년은 선택 목록에서 고르세요. 교육경력은 연 단위 숫자(예: 12.5)입니다.</span>
+      <span class="hint">직위·재직상태·담당학년은 선택 목록에서 고르세요. 교육경력은 연 단위 숫자(예: 12.5), 선호도는 조사지에서 받은 표 수(숫자)입니다.</span>
     </div>
     <div class="tblwrap">
       <table id="tblTeachers">
@@ -230,7 +270,7 @@ td input:focus,td select:focus{border-color:var(--accent);background:#fff;outlin
           <th style="width:34px">#</th><th style="width:96px">성명</th><th style="width:60px">성별</th>
           <th style="width:118px">직위</th><th style="width:88px">교육경력(년)</th>
           <th style="width:104px">당해학교(개월)</th><th style="width:96px">담당학년</th>
-          <th style="width:110px">구분</th><th style="width:120px">기타</th>
+          <th style="width:110px">구분</th><th style="width:120px">기타</th><th style="width:120px">선호도<br><span style="font-weight:400;font-size:11px;color:var(--muted)">(선호도 조사 후 입력)</span></th>
           <th style="width:96px">재직상태</th><th style="width:44px"></th>
         </tr></thead>
         <tbody></tbody>
@@ -290,12 +330,67 @@ td input:focus,td select:focus{border-color:var(--accent);background:#fff;outlin
       <div class="desc">교육경력·담당학년은 모든 구간이 표시됩니다. 필요한 칸에만 인원을 넣고 <b>0명은 제한 없음</b>으로 처리됩니다. 합계가 선정 인원보다 적으면 나머지는 자유 선발됩니다.</div>
       <div class="chks" style="margin-bottom:12px">
         <label><input type="checkbox" id="fGenderMix"> <b>남·여 배분 필요</b> — 남교사·여교사를 각 1명 이상 포함</label>
+        <label><input type="checkbox" id="fPrefUse"> <b>선호도 조사 결과 반영</b> — 선호도 조사 결과가 높은 순으로 우선 선발</label>
+        <div class="hint" style="margin:-3px 0 0 24px">배분 기준(쿼터)은 먼저 채우되, 각 기준 안에서도 표를 많이 받은 교사부터 선발합니다. 동점이면 선정 방식(추첨/점수)으로 정합니다.</div>
       </div>
       <div id="quotaBox" style="max-height:330px;overflow:auto"></div>
       <button class="g sm" id="btnAddQuota" style="margin-top:6px">+ 기준 추가</button>
       <button class="g sm" id="btnResetQuota" style="margin-top:6px">기본값으로 되돌리기</button>
       <div class="hint" id="quotaSum"></div>
     </div>
+  </div>
+
+  <div class="card" id="surveyCard">
+    <h2 class="big30">선호도 조사지 만들기</h2>
+    <div class="desc">배분 기준의 항목별로 교사 이름과 체크박스만 있는 조사지를 만듭니다. 회수한 조사지에서 선생님별 ✔ 표시 수를 세어 <b>① 교사 명단</b>의 ‘선호도’ 칸에 숫자로 입력하세요.</div>
+    <div class="row mb">
+      <label class="f">조사지 종류
+        <select id="svType" style="width:230px">
+          <option value="career">교육경력별</option>
+          <option value="grade">담당학년별</option>
+          <option value="dept">구분 (배분 기준에 설정한 대상)</option>
+          <option value="kind">직종 (배분 기준에 설정한 대상)</option>
+          <option value="one">4종 한 장에 모두 (A4 1쪽)</option>
+          <option value="all">4종 모두 (종류별로 쪽 나눔)</option>
+        </select></label>
+      <label class="f">회신 기한
+        <input type="date" id="svDue"></label>
+    </div>
+    <div class="chks mb">
+      <label><input type="checkbox" id="svEligible"> 후보 자격 조건을 충족하는 교사만 포함</label>
+    </div>
+    <div class="row">
+      <button class="b" id="btnSvPrint">조사지 인쇄 / PDF 저장</button>
+      <button class="g" id="btnSvWord">Word(.doc)로 저장</button>
+    </div>
+    <details class="svfair">
+      <summary>⚠ 선호도 조사 결과 활용 시 유의사항 — 여러 조사지의 표를 합산하면 불공정이 생길 수 있습니다 (눌러서 펼치기)</summary>
+      <div class="in">
+        <p>4종 조사지의 표를 하나로 합쳐 ‘선호도’ 칸에 입력하면, 조사지 구성의 차이가 마치 동료들의 지지 차이처럼 함께 더해집니다. 교원 50명이 4종 조사지에 모두 참여하는 경우를 모의 실험한 결과, 다음 네 가지 불공정이 확인되었습니다.</p>
+
+        <h4>1. 표를 받을 기회의 횟수가 다릅니다</h4>
+        <p>교육경력별·담당학년별 조사지에는 전원이 나오지만, 구분 조사지에는 담임만, 직종 조사지에는 비교과교사만 나옵니다.</p>
+        <div class="ex">예) 김 선생님(담임, 경력 12년)은 3장, 이 선생님(부장교사, 경력 12년)은 2장에 이름이 나옵니다. 두 분을 똑같이 지지하는 동료 10명이 나올 때마다 체크하면 김 선생님 30표, 이 선생님 20표가 됩니다.<br>
+        모의 실험(모든 교사의 인기가 같다고 가정): 3장에 나오는 교사 평균 <b>12.8표</b>, 2장에 나오는 교사 평균 <b>7.5표</b></div>
+
+        <h4>2. 인원이 적은 구간일수록 한 표의 가치가 큽니다</h4>
+        <div class="ex">구간마다 1명씩 체크하면 비교과교사 구간(5명)은 1인당 약 <b>10표</b>, 담임 구간(31명)은 1인당 약 <b>1.6표</b>입니다. 지지와 관계없이 작은 구간에 속했다는 이유만으로 표가 많아집니다.</div>
+
+        <h4>3. 혼자 있는 구간은 표를 자동으로 받습니다</h4>
+        <div class="ex">담당학년별 조사지의 ‘기타’ 구간(특수교사 등)에 1명만 있으면, 구간마다 1명씩 체크할 때 경쟁 없이 모든 표를 받습니다. 모의 실험에서 이 교사가 57표로 1위를 했습니다.</div>
+
+        <h4>4. 이 유리함이 다른 배분 기준으로 옮겨 갑니다</h4>
+        <div class="ex">‘교육경력 10년 이내’에서 1명을 뽑을 때는 교육경력 조사지의 표만으로 비교하는 것이 맞습니다. 그런데 합산 표에는 5명짜리 직종 구간에서 쉽게 얻은 표까지 들어 있어 비교과 교사가 유리해집니다.</div>
+
+        <h4>활용 방법 (권장)</h4>
+        <p>· <b>배분 기준과 같은 종류의 조사지 표만 비교하는 것</b>이 가장 공정합니다. 예를 들어 교육경력 구간별로 위원을 뽑는다면 교육경력별 조사지 1종만 실시하고 그 표를 ‘선호도’ 칸에 입력하세요.</p>
+        <p>· 여러 조사지를 실시했다면 표를 합산하지 말고, 조사지별 집계표를 따로 보관해 위원회에서 함께 검토하세요. (현재 프로그램의 ‘선호도’ 칸은 1개이므로 입력된 숫자로만 선발합니다.)</p>
+        <p>· 조사 전에 <b>“구간마다 1명” 또는 “전체에서 ○명까지”</b> 등 체크 방법을 하나로 정해 안내하세요. 방법이 사람마다 다르면 표의 의미가 달라집니다.</p>
+        <p>· 인원이 1~2명뿐인 구간이 있으면 조사지 미리보기에서 확인하고, 해당 교사의 표는 참고용으로만 보세요.</p>
+      </div>
+    </details>
+    <div class="hint" id="svInfo"></div>
+    <div id="svPreview"></div>
   </div>
 </section>
 
@@ -530,6 +625,34 @@ td input:focus,td select:focus{border-color:var(--accent);background:#fff;outlin
 
 </main>
 
+<!-- ============ 업데이트 안내 팝업 ============ -->
+<div id="updModal" role="dialog" aria-modal="true" aria-labelledby="updTitle">
+  <div class="box">
+    <div class="top"><b id="updTitle">버전 3.0 업데이트 안내 — 선호도 조사</b><span>2026. 9. 30. 업데이트</span></div>
+    <div class="bd">
+      <ol>
+        <li><b>① 교사 명단에 ‘선호도’ 칸 추가</b>
+          <small>선호도 조사지에서 해당 선생님이 받은 표 수(✔ 개수)를 숫자로 입력합니다. 엑셀·CSV에서는 ‘선호도조사’ 열로 불러올 수 있습니다.</small></li>
+        <li><b>② 위원회 설정 &gt; 배분 기준에 ‘선호도 조사 결과 반영’ 추가</b>
+          <small>체크하면 선호도 조사 결과가 높은 순으로 우선 선발합니다. 배분 기준은 먼저 채우되 각 기준 안에서도 표를 많이 받은 선생님부터 뽑으며, 동점이면 선정 방식(추첨·점수)으로 정합니다.</small></li>
+        <li><b>② 위원회 설정 아래에 ‘선호도 조사지 만들기’ 추가</b>
+          <small>교육경력별 · 담당학년별 · 구분 · 직종 조사지를 이름과 체크박스만으로 만듭니다. 4종을 A4 한 장에 모아 인쇄할 수도 있으며, 인쇄·PDF·Word 저장을 지원합니다.</small></li>
+        <li><b>⚠ 여러 조사지의 표를 합산할 때 유의하세요</b>
+          <small>교사마다 이름이 나오는 조사지 수와 구간 인원이 달라, 합산하면 지지와 무관한 차이가 생깁니다. ‘선호도 조사지 만들기’의 <b>유의사항</b>을 꼭 읽어 주세요.</small></li>
+        <li><b>⑤ 사후 검증 강화</b>
+          <small>선호도를 반영해 선정한 경우, 검증 파일의 선호도 값이 바뀌면 ‘변조 의심’으로 표시됩니다.</small></li>
+      </ol>
+    </div>
+    <div class="ft">
+      <label><input type="checkbox" id="updNoMore"> 이 버전 안내를 다시 보지 않기</label>
+      <div class="row" style="gap:8px">
+        <button class="g" id="updGo">선호도 조사 샘플 보기로 이동</button>
+        <button class="b" id="updClose">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 "use strict";
 
@@ -538,6 +661,10 @@ const POSITIONS = ["교사","담임교사","교과전담교사","수석교사","
 const STATUSES  = ["재직","휴직","파견","직위해제","정직","기타"];
 const GRADES    = ["","1학년","2학년","3학년","4학년","5학년","6학년","전담","비담임","특수","유치원"];
 const KINDS     = ["","관리자","담임","부장교사","수석교사","비교과"];
+/* 선호도 = 선호도 조사지에서 받은 표 수(0 이상의 정수). 빈칸은 0표로 처리 */
+function normPref(v){ v=String(v==null?"":v).replace(/[표명\s,]/g,""); if(v==="") return "";
+  const n=Number(v); return (isFinite(n)&&n>=0) ? String(Math.round(n)) : ""; }
+function prefScore(t){ const v=normPref(t.pref); return v===""?0:+v; }
 const NONSUBJ   = ["보건교사","영양교사","사서교사","전문상담교사"];
 const CONTRACT  = ["기간제교사","산학겸임교사","강사"];
 const ADMIN     = ["교감","교장"];
@@ -677,6 +804,7 @@ $$("nav button").forEach(b=>b.onclick=()=>{
   $$("nav button").forEach(x=>x.classList.toggle("on",x===b));
   $$("main section").forEach(s=>s.classList.toggle("on",s.id===b.dataset.tab));
   if(b.dataset.tab==="t3"){ renderPool(); }
+  if(b.dataset.tab==="t2"){ renderSurvey(); }
   if(b.dataset.tab==="t4"){ renderDoc(); }
 });
 function goTab(id){ $$("nav button").forEach(b=>{ if(b.dataset.tab===id) b.click(); }); }
@@ -688,7 +816,7 @@ function goTab(id){ $$("nav button").forEach(b=>{ if(b.dataset.tab===id) b.click
 });
 
 /* ---------------- 명단 ---------------- */
-function blankT(){ return {id:uid++,name:"",gender:"",position:"교사",career:"",months:"",grade:"",dept:"",subject:"",status:"재직"}; }
+function blankT(){ return {id:uid++,name:"",gender:"",position:"교사",career:"",months:"",grade:"",dept:"",subject:"",status:"재직",pref:""}; }
 
 function renderTeachers(){
   const tb=$("#tblTeachers tbody"); tb.innerHTML="";
@@ -704,6 +832,7 @@ function renderTeachers(){
       `<td>${sel("grade",t.grade,GRADES)}</td>`+
       `<td>${sel("dept",t.dept,KINDS)}</td>`+
       `<td><input data-f="subject" value="${esc(t.subject)}"></td>`+
+      `<td><input data-f="pref" type="number" min="0" step="1" placeholder="0" value="${esc(normPref(t.pref))}"></td>`+
       `<td>${sel("status",t.status,STATUSES)}</td>`+
       `<td><button class="g sm x" data-del="1">×</button></td>`;
     tr.querySelectorAll("[data-f]").forEach(el=>{
@@ -793,7 +922,7 @@ $("#btnSample").onclick=()=>{
 };
 $("#btnSampleDl").onclick=()=>{
   const R=sampleRoster();
-  const rows=[TPL_HEAD, ...R.map(t=>[t.name,t.gender,t.position,t.career,t.months,t.grade,t.dept,t.subject,t.status])];
+  const rows=[TPL_HEAD, ...R.map(t=>[t.name,t.gender,t.position,t.career,t.months,t.grade,t.dept,t.subject,t.pref||"",t.status])];
   dl("예시_교사명단_54명.csv",
      "﻿"+rows.map(r=>r.map(v=>`"${String(v==null?"":v).replace(/"/g,'""')}"`).join(",")).join("\r\n"),
      "text/csv;charset=utf-8");
@@ -803,9 +932,9 @@ $("#btnSampleDl").onclick=()=>{
 function msg(text,kind){ $("#loadMsg").innerHTML = `<div class="note ${kind||"i"}">${esc(text)}</div>`; }
 
 /* CSV 양식 */
-const TPL_HEAD = ["성명","성별","직위","교육경력(년)","당해학교근무(개월)","담당학년","구분","기타","재직상태"];
+const TPL_HEAD = ["성명","성별","직위","교육경력(년)","당해학교근무(개월)","담당학년","구분","기타","선호도조사","재직상태"];
 $("#btnTpl").onclick=()=>{
-  const rows=[TPL_HEAD, ["홍길동","남","교사","12.5","24","5학년","담임","","재직"]];
+  const rows=[TPL_HEAD, ["홍길동","남","교사","12.5","24","5학년","담임","","3","재직"]];
   dl("위원선정_명단양식.csv","﻿"+rows.map(r=>r.join(",")).join("\r\n"),"text/csv;charset=utf-8");
 };
 function dl(fn,content,type){
@@ -866,6 +995,7 @@ const COLMAP=[
   {f:"grade",  keys:["담당학년","학년"]},
   {f:"dept",   keys:["구분","부서","업무부서","담당부서"]},
   {f:"subject",keys:["기타","비고","담당교과","교과","과목"]},
+  {f:"pref",   keys:["선호도","선호도조사","득표","득표수"]},
   {f:"status", keys:["재직상태","상태","재직"]}
 ];
 function ingest(rows){
@@ -901,7 +1031,7 @@ function ingest(rows){
     }
     out.push({id:uid++, name:nm, gender:g("gender").slice(0,1),
       position:pos, career:parseFloat(g("career"))||"", months:parseFloat(g("months"))||"",
-      grade:gr, dept:kd, subject:g("subject"), status:st});
+      grade:gr, dept:kd, subject:g("subject"), pref:normPref(g("pref")), status:st});
   }
   if(!out.length){ msg("읽어들일 교사 행이 없습니다.","w"); return; }
   S.teachers=out; S.pinned=[]; S.banned=[]; S.result=null;
@@ -944,6 +1074,7 @@ function syncCfgUI(){
   $("#fMonths").value = f.fMonths||0; $("#fCareer").value = f.fCareer||0;
   $("#fChair").value = S.cfg.chair||"none";
   $("#fGenderMix").checked = !!S.cfg.genderMix;
+  $("#fPrefUse").checked = !!S.cfg.prefUse;
   updateChairNote();
   updateSizeNote();
 }
@@ -964,6 +1095,7 @@ function updateChairNote(){
 function bindCfg(){
   $("#fChair").onchange=()=>{ S.cfg.chair=$("#fChair").value; save(); updateChairNote(); };
   $("#fGenderMix").onchange=()=>{ S.cfg.genderMix=$("#fGenderMix").checked; save(); renderQuotas(); };
+  $("#fPrefUse").onchange=()=>{ S.cfg.prefUse=$("#fPrefUse").checked; save(); };
   $("#cName").oninput=()=>{S.cfg.name=$("#cName").value;save();};
   $("#cSize").oninput=()=>{S.cfg.size=+$("#cSize").value||0;save();updateSizeNote();updateQuotaNote();};
   $("#cBasis").oninput=()=>{S.cfg.basis=$("#cBasis").value;save();};
@@ -1050,6 +1182,117 @@ $("#btnResetQuota").onclick=()=>{
   save(); syncCfgUI(); renderQuotas();
 };
 
+/* ---------------- 선호도 조사지 ---------------- */
+/* 종류별 조사지: 교육경력·담당학년은 전 구간, 구분·직종은 배분 기준에 설정한 대상만 */
+const SV_TYPES = {career:"교육경력별", grade:"담당학년별", dept:"구분", kind:"직종"};
+function svCfg(){ S.survey=S.survey||{}; if(S.survey.eligible===undefined) S.survey.eligible=true;
+  if(!SV_TYPES[S.survey.type] && S.survey.type!=="all" && S.survey.type!=="one") S.survey.type="career"; return S.survey; }
+function svSheet(ax){
+  const c=svCfg(), A=AXES[ax];
+  const list=S.teachers.filter(t=>t.name && (!c.eligible || eligibility(t).length===0));
+  const buckets = (ax==="dept"||ax==="kind")
+    ? [...new Set((S.cfg.quotas||[]).filter(q=>q.axis===ax).map(q=>q.bucket))]
+    : A.buckets;
+  const groups=buckets.map(b=>({title:b, rows:list.filter(t=>A.of(t)===b)})).filter(g=>g.rows.length);
+  return {ax, label:SV_TYPES[ax], groups, total:groups.reduce((a,g)=>a+g.rows.length,0), noSetting:!buckets.length};
+}
+function svSheets(){ const t=svCfg().type; return (t==="all"||t==="one"?Object.keys(SV_TYPES):[t]).map(svSheet); }
+function sheetHTML(sh){
+  const c=svCfg(), cname=S.cfg.name||"위원회";
+  let h=`<div class="sheet"><h1>${esc(cname)} 위원 선호도 조사 (${esc(sh.label)})</h1>`+
+    `<div class="guide">위원으로 적합하다고 생각하는 선생님의 이름 앞 □에 ✔ 표시해 주십시오.`+
+    (c.due?` (회신 기한: ${esc(korDate(c.due))})`:"")+`</div>`;
+  if(sh.noSetting) return h+`<p>배분 기준에 ‘${esc(sh.label)}’ 항목이 설정되어 있지 않습니다.</p></div>`;
+  if(!sh.total) return h+`<p>해당하는 교사가 없습니다.</p></div>`;
+  sh.groups.forEach(g=>{
+    h+=`<h3>■ ${esc(g.title)} (${g.rows.length}명)</h3><table><tbody>`;
+    for(let i=0;i<g.rows.length;i+=5){
+      h+="<tr>"+[0,1,2,3,4].map(k=>{ const t=g.rows[i+k]; return `<td>${t?"□ "+esc(t.name):""}</td>`; }).join("")+"</tr>";
+    }
+    h+=`</tbody></table>`;
+  });
+  return h+`</div>`;
+}
+/* 4종을 한 장에: 구간 이름을 왼쪽 칸에 두고 한 줄에 6명 */
+function compactHTML(sheets){
+  const c=svCfg(), cname=S.cfg.name||"위원회", PER=6;
+  let h=`<div class="svdoc one"><h1>${esc(cname)} 위원 선호도 조사</h1>`+
+    `<div class="guide">위원으로 적합하다고 생각하는 선생님의 이름 앞 □에 ✔ 표시해 주십시오.`+
+    (c.due?` (회신 기한: ${esc(korDate(c.due))})`:"")+`</div>`;
+  sheets.forEach((sh,i)=>{
+    h+=`<h2>${i+1}. ${esc(sh.label)}</h2>`;
+    if(sh.noSetting){ h+=`<p>배분 기준에 ‘${esc(sh.label)}’ 항목이 설정되어 있지 않습니다.</p>`; return; }
+    if(!sh.total){ h+=`<p>해당하는 교사가 없습니다.</p>`; return; }
+    h+=`<table class="cmp"><tbody>`;
+    sh.groups.forEach(g=>{
+      const n=Math.ceil(g.rows.length/PER);
+      for(let r=0;r<n;r++){
+        h+="<tr>"+(r===0?`<th rowspan="${n}">${esc(g.title)}<small>${g.rows.length}명</small></th>`:"")+
+          Array.from({length:PER},(_,k)=>{ const t=g.rows[r*PER+k]; return `<td>${t?"□ "+esc(t.name):""}</td>`; }).join("")+"</tr>";
+      }
+    });
+    h+=`</tbody></table>`;
+  });
+  return h+`</div>`;
+}
+function surveyHTML(){
+  if(svCfg().type==="one") return compactHTML(svSheets());
+  return `<div class="svdoc">${svSheets().map(sheetHTML).join("")}</div>`; }
+/* 교사 명단에 이름이 하나도 없으면 미리보기에만 예시 명단으로 만든 샘플을 보여 줌 (실제 명단·저장값은 건드리지 않음) */
+function svIsSample(){ return !S.teachers.some(t=>String(t.name||"").trim()); }
+function withSampleRoster(fn){
+  const keep=S.teachers;
+  S.teachers=sampleRoster().map((t,i)=>Object.assign({id:-(i+1)},t));
+  try{ return fn(); } finally{ S.teachers=keep; }
+}
+function renderSurvey(){
+  if(!$("#svPreview")) return;
+  const c=svCfg(), sample=svIsSample();
+  $("#svType").value=c.type; $("#svDue").value=c.due||""; $("#svEligible").checked=!!c.eligible;
+  const build=()=>({info:svSheets().map(sh=>`${esc(sh.label)} <b>${sh.total}명</b>`).join(" · "), html:surveyHTML()});
+  const r=sample?withSampleRoster(build):build();
+  $("#svInfo").innerHTML=(sample?`<div class="note i" style="margin:10px 0 0"><b>샘플 미리보기</b> — 교사 명단이 비어 있어 <b>예시 명단(54명)</b>으로 만든 샘플 조사지입니다. `+
+      `① 교사 명단을 입력하면 실제 명단으로 바뀝니다. (입력하신 명단은 바뀌지 않습니다)</div>`:"")+
+    (sample?"샘플 기준: ":"")+r.info+
+    (c.type==="one"?"<br>인원이 많아 한 장을 넘으면 인쇄할 때 자동으로 축소해 A4 1쪽에 맞춥니다. (Word 저장본은 자동 축소되지 않습니다)":"");
+  $("#svPreview").innerHTML=r.html;
+}
+function svBlockIfSample(){
+  if(!svIsSample()) return false;
+  alert("지금 보이는 것은 예시 명단으로 만든 샘플입니다.\n① 교사 명단을 입력한 뒤 인쇄하거나 저장해 주세요.");
+  return true;
+}
+function svDocFull(forPrint){
+  const fit=!!forPrint && svCfg().type==="one";
+  const css=[...document.styleSheets].map(ss=>{ try{ return [...ss.cssRules].map(r=>r.cssText).filter(x=>x.startsWith(".svdoc")).join("\n"); }catch(e){ return ""; } }).join("\n");
+  return `<!doctype html><html><head><meta charset="utf-8"><title>선호도 조사</title>`+
+    `<style>@page{size:A4;margin:${fit?"10mm":"15mm 13mm"}} body{margin:0} ${css}</style></head><body>${surveyHTML()}`+
+    (fit?`<script>(function(){var W=714,H=1030,b=document.body;b.style.width=W+"px";`+
+      `var h=b.scrollHeight;if(h>H){var z=H/h;b.style.width=(W/z)+"px";h=b.scrollHeight;z=H/h*0.98;b.style.width=(W/z)+"px";b.style.zoom=z;`+
+      `for(var i=0;i<8&&b.getBoundingClientRect().height>H;i++){z*=0.96;b.style.width=(W/z)+"px";b.style.zoom=z;}}})();</scr`+`ipt>`:"")+
+    `</body></html>`;
+}
+$("#svType").onchange=()=>{ svCfg().type=$("#svType").value; save(); renderSurvey(); };
+$("#svDue").onchange=()=>{ svCfg().due=$("#svDue").value; save(); renderSurvey(); };
+$("#svEligible").onchange=()=>{ svCfg().eligible=$("#svEligible").checked; save(); renderSurvey(); };
+$("#btnSvPrint").onclick=()=>{
+  if(svBlockIfSample()) return;
+  const w=window.open("","_blank");
+  if(!w){ alert("팝업이 차단되어 인쇄 창을 열 수 없습니다. 팝업을 허용하거나 Word(.doc)로 저장해 주세요."); return; }
+  w.document.open(); w.document.write(svDocFull(true)); w.document.close();
+  w.focus(); setTimeout(()=>w.print(),300);
+};
+$("#btnSvWord").onclick=()=>{
+  if(svBlockIfSample()) return;
+  const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word">`+
+    svDocFull().replace(/^<!doctype html><html>/,"").replace("</html>","")+`</html>`;
+  const t=svCfg().type;
+  dl(`${S.school.year||""}_${S.cfg.name||"위원회"}_선호도조사지_${t==="all"?"전체":t==="one"?"한장":SV_TYPES[t]}.doc`,"﻿"+html,"application/msword");
+};
+/* 위원회 설정 화면의 값(자격 조건·배분 기준 등)이 바뀌면 조사지 미리보기 갱신 */
+$("#t2").addEventListener("change",e=>{ if(!e.target.closest("#surveyCard")) renderSurvey(); });
+$("#t2").addEventListener("input",e=>{ if(!e.target.closest("#surveyCard")) renderSurvey(); });
+
 /* ---------------- 후보 판정 ---------------- */
 function eligibility(t){
   const f=S.cfg.filters||{}; const r=[];
@@ -1128,6 +1371,9 @@ function order(cands,alg,rng,chosen){
   } else {
     a.sort((x,y)=>x.r-y.r);
   }
+  // 선호도 조사 결과 반영: 받은 표 수가 많은 순으로 먼저 정렬.
+  // 동점 안에서는 위 방식(무작위/균형)의 순서를 그대로 유지(안정 정렬) → 시드 재현성 유지
+  if(S.cfg.prefUse) a.sort((x,y)=>prefScore(y.t)-prefScore(x.t));
   return a.map(o=>o.t);
 }
 function runSelect(){
@@ -1319,7 +1565,10 @@ function canonicalOf(r){
     (r.cfg&&r.cfg.genderMix)?1:0,
     ["fStatus","fContract","fAdmin","fMaster","fMonths","fCareer"].map(k=>k+"="+(f[k]||0)).join(","),
     q, r.algo, r.seed, (r.pinned||[]).join("."), (r.banned||[]).join("."),
-    (r.teachers||[]).length, t ].join("§");
+    (r.teachers||[]).length, t ]
+    // 선호도 반영 시에만 선호도를 지문에 포함 (반영하지 않은 기존 검증 파일의 지문은 그대로 유지)
+    .concat((r.cfg&&r.cfg.prefUse) ? ["pref=1", (r.teachers||[]).map(x=>normPref(x.pref)).join(";")] : [])
+    .join("§");
 }
 function fingerprintOf(r){
   const s=canonicalOf(r);
@@ -1363,7 +1612,7 @@ $("#btnVerSave").onclick=()=>{
 $("#btnVerRoster").onclick=()=>{
   if(!S.teachers.length){ alert("명단이 비어 있습니다."); return; }
   const rows=[["연번",...TPL_HEAD], ...S.teachers.map((t,i)=>
-    [i+1,t.name,t.gender,t.position,t.career,t.months,t.grade,t.dept,t.subject,t.status])];
+    [i+1,t.name,t.gender,t.position,t.career,t.months,t.grade,t.dept,t.subject,t.pref||"",t.status])];
   dl(`선정당시_전체명단_${S.school.year||""}_${S.cfg.name||"위원회"}.csv`,
      "﻿"+rows.map(r=>r.map(v=>`"${String(v==null?"":v).replace(/"/g,'""')}"`).join(",")).join("\r\n"),
      "text/csv;charset=utf-8");
@@ -1706,7 +1955,7 @@ $("#btnWord").onclick=()=>{
 $("#btnCsv").onclick=()=>{
   const sel=selectedTeachers();
   if(!sel.length){ alert("선정 결과가 없습니다."); return; }
-  const rows=[["연번",...TPL_HEAD], ...sel.map((t,i)=>[i+1,t.name,t.gender,t.position,t.career,t.months,t.grade,t.dept,t.subject,t.status])];
+  const rows=[["연번",...TPL_HEAD], ...sel.map((t,i)=>[i+1,t.name,t.gender,t.position,t.career,t.months,t.grade,t.dept,t.subject,t.pref||"",t.status])];
   dl(`${S.school.year||""}_${S.cfg.name||"위원회"}_명단.csv`,
      "﻿"+rows.map(r=>r.map(v=>`"${String(v==null?"":v).replace(/"/g,'""')}"`).join(",")).join("\r\n"),
      "text/csv;charset=utf-8");
@@ -1731,7 +1980,26 @@ $("#btnCsv").onclick=()=>{
   $("#docDate").value=todayISO();
   bindCfg(); renderPresets(); syncCfgUI(); renderTeachers(); renderQuotas();
   save();
+  initUpdateNotice();
 })();
+
+/* ---------------- 업데이트 안내 팝업 ---------------- */
+function initUpdateNotice(){
+  const VER="3.0", KEY="wiwon_notice_seen";
+  const m=$("#updModal");
+  const open=()=>{ $("#updNoMore").checked=false; m.classList.add("on"); $("#updClose").focus(); };
+  const close=()=>{
+    if($("#updNoMore").checked){ try{ localStorage.setItem(KEY,VER); }catch(e){} }
+    m.classList.remove("on");
+  };
+  $("#updClose").onclick=close;
+  $("#updGo").onclick=()=>{ close(); goTab("t2"); renderSurvey(); setTimeout(()=>$("#surveyCard").scrollIntoView({behavior:"smooth",block:"start"}),50); };
+  m.addEventListener("click",e=>{ if(e.target===m) close(); });
+  document.addEventListener("keydown",e=>{ if(e.key==="Escape" && m.classList.contains("on")) close(); });
+  $("#lnkUpd").onclick=open;
+  let seen=""; try{ seen=localStorage.getItem(KEY)||""; }catch(e){}
+  if(seen!==VER) open();
+}
 </script>
 </body>
 </html>
